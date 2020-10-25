@@ -74,7 +74,7 @@ export default defineConfig({
             {
               // name: '编辑工单',
               // icon: 'table',
-              path: '/orderList/edit',
+              path: '/orderList/edit/:id',
               component: './orderList/components/edit',
             },
             {

@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Popconfirm, Form, InputNumber } from 'antd';
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { Table, Input, Button, Popconfirm, Form, InputNumber } from "antd";
 
 const EditableContext = React.createContext();
 
@@ -45,20 +45,20 @@ const EditableCell = ({
       toggleEdit();
       handleSave({ ...record, ...values });
     } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+      console.log("Save failed:", errInfo);
     }
   };
 
   const freightRule = (rule, value, callback) => {
     if (value < 1 || value > 9999) {
-      callback('输入不在允许范围内');
+      callback("输入不在允许范围内");
     }
     callback();
   };
 
   const moneyRule = (rule, value, callback) => {
     if (value < 0 || value > 9999.99) {
-      callback('输入不在允许范围内');
+      callback("输入不在允许范围内");
     }
     callback();
   };
@@ -68,7 +68,7 @@ const EditableCell = ({
   if (editable) {
     childNode = editing ? (
       <div>
-        {title === '首件(个)' || title === '续件(个)' ? (
+        {title === "首件(个)" || title === "续件(个)" ? (
           <Form.Item
             style={{
               margin: 0,
@@ -84,7 +84,12 @@ const EditableCell = ({
               },
             ]}
           >
-            <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} precision={0} />
+            <InputNumber
+              ref={inputRef}
+              onPressEnter={save}
+              onBlur={save}
+              precision={0}
+            />
           </Form.Item>
         ) : (
           <Form.Item
@@ -160,16 +165,20 @@ export default class EditableTable extends React.Component {
   handleDelete = (key) => {
     const dataSource = [...this.state.dataSource];
     this.setState({
-      dataSource: dataSource.filter((item) => (item.key || item.region_no) !== key),
+      dataSource: dataSource.filter(
+        (item) => (item.key || item.region_no) !== key
+      ),
     });
 
-    this.props.getlist(dataSource.filter((item) => (item.key || item.region_no) !== key));
+    this.props.getlist(
+      dataSource.filter((item) => (item.key || item.region_no) !== key)
+    );
   };
 
   handleSave = (row) => {
     const newData = [...this.state.dataSource];
     const index = newData.findIndex(
-      (item) => (row.key || row.region_no) === (item.key || item.region_no),
+      (item) => (row.key || row.region_no) === (item.key || item.region_no)
     );
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
@@ -183,13 +192,16 @@ export default class EditableTable extends React.Component {
   columns = [
     ...this.props.tableColumns,
     {
-      title: '操作',
-      dataIndex: 'operation',
+      title: "操作",
+      dataIndex: "operation",
       render: (text, record) => {
         const key = record.key || record.region_no;
         return (
-          <Popconfirm title="确定删除此条配送区域?" onConfirm={() => this.handleDelete(key)}>
-            <a>删除</a>
+          <Popconfirm
+            title="确定删除此条配送区域?"
+            onConfirm={() => this.handleDelete(key)}
+          >
+            <span style={{ color: "red" }}>删除</span>
           </Popconfirm>
         );
       },
@@ -198,7 +210,7 @@ export default class EditableTable extends React.Component {
 
   render() {
     const { dataSource } = this.state;
-    console.log(this.props, 'props');
+    console.log(this.props, "props");
     const components = {
       body: {
         row: EditableRow,
@@ -225,11 +237,12 @@ export default class EditableTable extends React.Component {
       <div>
         <Table
           components={components}
-          rowClassName={() => 'editable-row'}
+          rowClassName={() => "editable-row"}
           bordered
           dataSource={dataSource}
           columns={columns}
           pagination={false}
+          rowKey={(record) => record.ID}
           title={() => {
             return <Button type="primary">新增</Button>;
           }}

@@ -47,7 +47,7 @@ export function getRoutes() {
             "exact": true
           },
           {
-            "path": "/orderList/edit",
+            "path": "/orderList/edit/:id",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__orderList__components__edit' */'C:/Users/hanawa/Desktop/dms/dms/src/pages/orderList/components/edit'), loading: LoadingComponent}),
             "exact": true
           },

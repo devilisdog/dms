@@ -3,7 +3,7 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import { extend } from 'umi-request';
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -26,7 +26,11 @@ const codeMessage = {
  */
 
 const errorHandler = (error) => {
+
+  
   const { response } = error;
+
+  console.log(response,'response')
 
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
@@ -49,19 +53,19 @@ const errorHandler = (error) => {
  */
 
 const request = extend({
-  errorHandler,
+  // errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use(async (url, options) => {
-  let c_token = localStorage.getItem('x-auth-token');
+  let c_token = localStorage.getItem('token');
   if (c_token) {
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       Accept: 'application/json',
-      'x-auth-token': c_token,
+      'Authorization': c_token,
     };
     return {
       url: url,
@@ -75,111 +79,41 @@ request.interceptors.request.use(async (url, options) => {
   }
 });
 
+
+request.interceptors.response.use(async response => {
+
+  const data = await response.clone().json();
+
+  if(response?.status==401){
+    location.href = '/user/login';
+    localStorage.clear()
+    return 
+  }
+  if(response?.status==400){
+    message.error(data?.msg)
+    return 
+  }
+  if(response?.status==500){
+    message.error('系统错误')
+    return 
+  }
+  return response;
+});
+
+
+
 // response拦截器, 处理response
-request.interceptors.response.use(
-  (response, options) => {
-    if (response.data.code == 401) {
-      message.error('请重新登录');
-      localStorage.clear();
-      window.location.reload();
-      window.location.replace('/user/login');
-      return Promise.reject(response.data.msg);
-    }
-
-    if (response.data.code !== 200) {
-      message.error(response.data.msg);
-      return Promise.reject(response.data.msg);
-    }
-    return response;
-  },
-  function (error) {
-    const status = error.response && error.response.status;
-    if (status == 400) {
-      message.error(error.response);
-    } else {
-      message.error('超时，请稍后再试');
-    }
-    return Promise.reject(error);
-  },
-);
-export default request;
-
-// import axios from 'axios';
-// import { message } from 'antd';
-// import base_url from '../../config/proConig';
-
-// const instance = axios.create({
-//   baseURL: base_url,
-//   timeout: 25000,
-//   headers: { 'Content-Type': 'application/json;charset=utf-8' },
-// });
-
-// const maptoString = (obj) => {
-//   let newObj = { ...obj };
-//   for (let i in newObj) {
-//     if (Array.isArray(obj[i])) {
-//       newObj[i] = JSON.stringify(obj[i]);
-//     } else {
-//       newObj[i] = String(obj[i]);
-//     }
-//   }
-//   return newObj;
-// };
-
-// instance.interceptors.request.use(
-//   function (config) {
-//     config.headers['x-auth-token'] = localStorage.getItem('token')
-//       ? localStorage.getItem('token')
-//       : undefined;
-//     config.headers['content-type'] = 'application/json;charset=utf-8';
-
-//     let bodyParams =
-//       config.method !== 'get'
-//         ? makeBody({
-//             ...config.data,
-//           })
-//         : makeBody({
-//             ...maptoString(config.params),
-//           });
-//     let postParams =
-//       config.method !== 'get'
-//         ? {
-//             ...bodyParams,
-//             ...config.data,
-//           }
-//         : {
-//             ...bodyParams,
-//             ...config.params,
-//             timestamp,
-//           };
-
-//     config.method !== 'get'
-//       ? (config.data = postParams)
-//       : (config.params = {
-//           ...postParams,
-//         });
-
-//     return config;
-//   },
-
-//   function (error) {
-//     return Promise.reject(error);
-//   },
-// );
-
-// instance.interceptors.response.use(
-//   function (response) {
-//     if (response.data.code == 401) {
+// request.interceptors.response.use(
+//   (response, options) => {
+//     if (response.status == 401) {
 //       message.error('请重新登录');
 //       localStorage.clear();
-//       sessionStorage.clear();
 //       window.location.reload();
-
 //       window.location.replace('/user/login');
-//       return Promise.reject(response.data.msg);
+//       return Promise.reject(response.statusText);
 //     }
 
-//     if (response.data.code !== 200) {
+//     if (response.status !== 200) {
 //       message.error(response.data.msg);
 //       return Promise.reject(response.data.msg);
 //     }
@@ -195,5 +129,6 @@ export default request;
 //     return Promise.reject(error);
 //   },
 // );
+export default request;
 
-// export default instance;
+
