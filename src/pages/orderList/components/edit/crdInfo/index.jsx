@@ -87,7 +87,7 @@ export default function CrdInfo(props) {
     const params = {
       vehicleTag: props?.TBL_RepairOrder?.VehicleTag,
     };
-    request.get("/v1/vehicle/repair-project", { params }).then((res) => {
+    request.get("/v1/vehicle/repair-part", { params }).then((res) => {
       setDataSource(res?.data);
     });
 
@@ -100,12 +100,12 @@ export default function CrdInfo(props) {
   };
 
   const columns = [
-    { title: "工单号", dataIndex: "工单号" },
-    { title: "开单日期", dataIndex: "开单日期" },
-    { title: "进场里程", dataIndex: "进厂里程" },
-    { title: "配件名称", dataIndex: "项目名称" },
-    { title: "数量", dataIndex: "" },
-    { title: "应收金额", dataIndex: "应收工时费" },
+    { title: "工单号", dataIndex: "RepairOrderCode" },
+    { title: "开单日期", dataIndex: "CeateDate" },
+    { title: "进场里程", dataIndex: "EnterUse" },
+    { title: "配件名称", dataIndex: "PartItem" },
+    { title: "数量", dataIndex: "count" },
+    { title: "应收金额", dataIndex: "ManhourExpense" },
   ];
 
   return (
@@ -313,11 +313,15 @@ export default function CrdInfo(props) {
         onCancel={() => setVisible(false)}
         visible={visible}
       >
-        <Table
-          dataSource={[]}
-          columns={columns}
-          rowKey={(record) => record.id}
-        />
+        <div style={{ height: "400px", overflowY: "scroll" }}>
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            rowKey={(record) => record.id}
+            scroll={{ x: 400 }}
+            pagination={false}
+          />
+        </div>
       </Modal>
     </div>
   );
