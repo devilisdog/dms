@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Card, Descriptions, Form } from "antd";
+import { Card, Descriptions, Form, Button, Modal, Table } from "antd";
 import moment from "moment";
 import CrdInfo from "./crdInfo";
 import EditTable from "@/components/EditTable";
 import request from "@/utils/request";
 
 import "./index.less";
+import { visible } from "chalk";
 
 const layout = {
   labelCol: { span: 8 },
@@ -81,12 +82,58 @@ const tableColumns_two = [
   },
 ];
 
+const colums1 = [
+  { title: "项目名称", dataIndex: "ManhourItemName" },
+  { title: "标准工时", dataIndex: "StandardManHour" },
+  { title: "工时费", dataIndex: "ManhourExpense" },
+  { title: "适用车型", dataIndex: "VehicleGroupCode" },
+];
+const colums2 = [
+  { title: "套餐名称", dataIndex: "RepairMenuName" },
+  { title: "套餐类型", dataIndex: "RepairMenuType" },
+  { title: "工时费", dataIndex: "RepairMenuExpense" },
+  { title: "适用车型", dataIndex: "VehicleGroupCode" },
+];
+
+const colums3 = [
+  { title: "零件号", dataIndex: "PartCode" },
+  { title: "零件名称", dataIndex: "PartName" },
+  {
+    title: "销售价",
+    dataIndex: "SellPrice1",
+    render: (text) => {
+      return Math.round(text);
+    },
+  },
+  { title: "适用车型", dataIndex: "VehicleType" },
+  { title: "库存", dataIndex: "StorageAmount" },
+  { title: "品牌", dataIndex: "PartBrand" },
+];
+
+const colums4 = [
+  { title: "项目名称", dataIndex: "" },
+  { title: "标准工时", dataIndex: "" },
+  { title: "工时费", dataIndex: "" },
+  { title: "适用车型", dataIndex: "" },
+];
+
+const columsObj = {
+  addProject: colums1,
+  addMeal: colums2,
+  addItem: colums3,
+  addItemMeal: colums4,
+};
+
 export default function Edit(props) {
   const [form] = Form.useForm();
 
   const code = props?.match?.params?.id;
 
   const [data, setData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [dataSource, setdataSource] = useState([]);
+  const [type, setType] = useState(null);
+  const [title, setTitle] = useState("");
 
   const searchDetail = () => {
     const params = {
@@ -140,6 +187,45 @@ export default function Edit(props) {
     searchDetail();
   }, []);
 
+  const showModal = (type) => {
+    const obj = {
+      addProject: "新增项目",
+      addMeal: "新增套餐",
+      addItem: "新增零件",
+      addItemMeal: "新增零件套餐",
+    };
+
+    const params = {
+      manHourItemCode: "",
+    };
+
+    if (type == "addProject") {
+      request.get("/v1/repair/item", params).then((res) => {
+        setdataSource(res?.data);
+      });
+    }
+
+    if (type == "addItem") {
+      request.get("/v1/car/parts", params).then((res) => {
+        setdataSource(res?.data);
+      });
+    }
+
+    if (type == "addMeal") {
+      request.get("/v1/car/repair-menu", params).then((res) => {
+        setdataSource(res?.data);
+      });
+    }
+
+    setType(type);
+    setVisible(true);
+    setTitle(obj[type]);
+  };
+
+  const handelOK = () => {
+    setVisible(false);
+  };
+
   const {
     Corporation,
     TBL_ManHourExpense,
@@ -171,13 +257,26 @@ export default function Edit(props) {
           <CrdInfo form={form} {...data} />
         </Card>
         <Card title="维修措施" style={{ marginBottom: "24px" }}>
+          <Button type="primary" onClick={() => showModal("addProject")}>
+            新增项目
+          </Button>
+          <Button type="primary" onClick={() => showModal("addMeal")}>
+            新增套餐
+          </Button>
           <EditTable
             form={form}
             tableColumns={tableColumns}
             dataSource={TBL_ManHourExpense}
           />
+          Item
         </Card>
         <Card title="更换零件" style={{ marginBottom: "24px" }}>
+          <Button type="primary" onClick={() => showModal("addItem")}>
+            新增零件
+          </Button>
+          <Button type="primary" onClick={() => showModal("addItemMeal")}>
+            新增套餐
+          </Button>
           <EditTable
             form={form}
             tableColumns={tableColumns_two}
@@ -210,6 +309,19 @@ export default function Edit(props) {
           </p>
         </Card>
       </Form>
+
+      <Modal
+        title={title}
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        onOk={handelOK}
+      >
+        <Table
+          columns={columsObj[type]}
+          dataSource={dataSource}
+          pagination={false}
+        />
+      </Modal>
     </div>
   );
 }

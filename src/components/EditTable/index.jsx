@@ -243,9 +243,6 @@ export default class EditableTable extends React.Component {
           columns={columns}
           pagination={false}
           rowKey={(record) => record.ID}
-          title={() => {
-            return <Button type="primary">新增</Button>;
-          }}
         />
       </div>
     );
