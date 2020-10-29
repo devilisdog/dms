@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Descriptions, Form, Button, Modal, Table } from "antd";
+import { Card, Descriptions, Form, Button, Modal, Radio } from "antd";
 import moment from "moment";
 import CrdInfo from "./crdInfo";
 import EditTable from "@/components/EditTable";
@@ -239,6 +239,9 @@ export default function Edit(props) {
     setKeyArr(list);
   };
 
+  //表格填充
+  const setFormValue = () => {};
+
   const componentsObj = {
     addProject: <AddPorject handelOK={handelOK} />,
     addMeal: <AddMeal handelOK={handelOK} />,
@@ -320,12 +323,34 @@ export default function Edit(props) {
             <p>3.如有涉及保修事项按《保修及保养手册》执行。</p>
             <p>4.如有涉及保修事项按《保修及保养手册》执行。</p>
           </Form.Item>
-          <Form.Item label="" colon={false}>
+
+          <p>
             4.旧件是否带走
-          </Form.Item>
-          <Form.Item label="" colon={false}>
+            <Form.Item
+              label=""
+              colon={false}
+              style={{ display: "inline-block" }}
+            >
+              <Radio.Group style={{ width: "100px" }}>
+                <Radio value={1}>是</Radio>
+                <Radio value={2}>否</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </p>
+
+          <p>
             5.是否洗车
-          </Form.Item>
+            <Form.Item
+              label=""
+              colon={false}
+              style={{ display: "inline-block" }}
+            >
+              <Radio.Group>
+                <Radio value={1}>是</Radio>
+                <Radio value={2}>否</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </p>
         </Card>
         <Card title="客户签署" style={{ marginBottom: "24px" }}>
           客户签署：入站：_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
