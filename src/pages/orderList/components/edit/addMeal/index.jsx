@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Modal } from "antd";
 import request from "@/utils/request";
-import { ShopFilled } from "@ant-design/icons";
 
 export default function AddMeal(props) {
   const [dataSource, setDataSource] = useState([]);
@@ -40,7 +39,7 @@ export default function AddMeal(props) {
     const params = {
       type: "1",
     };
-    request.get("/v1/car/repair-menu", params).then((res) => {
+    request.get("/v1/car/repair-menu", { params }).then((res) => {
       setDataSource(res?.data);
     });
   }, []);

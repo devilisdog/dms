@@ -30,8 +30,19 @@ export default function AddItem(props) {
   }, []);
 
   return (
-    <div>
-      <Table columns={colums} dataSource={dataSource} />
+    <div style={{ height: "400px", overflow: "scroll" }}>
+      <Table
+        columns={colums}
+        dataSource={dataSource}
+        pagination={false}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              props.handelOK(record);
+            }, // 点击行
+          };
+        }}
+      />
     </div>
   );
 }

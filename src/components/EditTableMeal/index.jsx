@@ -202,10 +202,10 @@ export default class EditableTable extends React.Component {
     },
   ];
 
-  onSelectChange = (selectedRowKeys, selectedRow) => {
-    this.props.getRow(selectedRowKeys);
-    this.setState({ selectedRowKeys });
-  };
+  // onSelectChange = (selectedRowKeys, selectedRow) => {
+  //   this.props.getRow(selectedRowKeys);
+  //   this.setState({ selectedRowKeys });
+  // };
 
   render() {
     const { dataSource, selectedRowKeys } = this.state;
@@ -232,14 +232,14 @@ export default class EditableTable extends React.Component {
       };
     });
 
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
+    // const rowSelection = {
+    //   selectedRowKeys,
+    //   onChange: this.onSelectChange,
+    // };
     return (
       <div>
         <Table
-          rowSelection={rowSelection}
+          // rowSelection={rowSelection}
           components={components}
           rowClassName={() => "editable-row"}
           bordered

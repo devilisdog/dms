@@ -21,24 +21,10 @@ const layout = {
 };
 
 const tableColumns = [
-  {
-    title: "维修措施",
-    dataIndex: "ManhourItemName",
-    editable: true,
-  },
-  {
-    title: "技师",
-    dataIndex: "person",
-  },
-  {
-    title: "工时费",
-    dataIndex: "ManhourExpense",
-    editable: true,
-  },
-  {
-    title: "收费区分",
-    dataIndex: "DistinguishFlag",
-  },
+  { title: "维修措施", dataIndex: "ManhourItemName", editable: true },
+  { title: "技师", dataIndex: "person" },
+  { title: "工时费", dataIndex: "ManhourExpense", editable: true },
+  { title: "收费区分", dataIndex: "DistinguishFlag" },
 ];
 
 const tableColumns_two = [
@@ -47,36 +33,12 @@ const tableColumns_two = [
     dataIndex: "provinces",
     render: (text, recod, index) => index + 1,
   },
-  {
-    title: "零件号",
-    dataIndex: "PartCode",
-    editable: true,
-  },
-  {
-    title: "需更换零件",
-    dataIndex: "PartName",
-    editable: true,
-  },
-  {
-    title: "数量",
-    dataIndex: "SellQuantity",
-    editable: true,
-  },
-  {
-    title: "单价",
-    dataIndex: "SellPrice",
-    editable: true,
-  },
-  {
-    title: "金额",
-    dataIndex: "SellSum",
-    editable: true,
-  },
-  {
-    title: "收费区分",
-    dataIndex: "DistinguishFlag",
-    editable: true,
-  },
+  { title: "零件号", dataIndex: "PartCode" },
+  { title: "需更换零件", dataIndex: "PartName" },
+  { title: "数量", dataIndex: "SellQuantity" },
+  { title: "单价", dataIndex: "SellPrice" },
+  { title: "金额", dataIndex: "SellSum" },
+  { title: "收费区分", dataIndex: "DistinguishFlag" },
 ];
 
 export default function Edit(props) {
@@ -165,11 +127,16 @@ export default function Edit(props) {
     setTitle(obj[type]);
   };
 
+  //*
+  //*
+  //维修措施部分操作
+  //*
+  //*
+
   //添加套餐，添加项目之后的数组
   const handelOK = (record) => {
     if (Array.isArray(record)) {
       const arr = [];
-
       record.map((item, index) => {
         arr.push({
           ...item,
@@ -203,7 +170,7 @@ export default function Edit(props) {
 
     dataSource.map((ele, index) => {
       row.map((item) => {
-        if (ele.Id == item) {
+        if (ele.Id == item || ele.ID == item) {
           newData.splice(index, 1, { ...ele, person: personRecord.Name });
         }
       });
@@ -214,22 +181,75 @@ export default function Edit(props) {
     setVisible(false);
   };
 
+  //*
+  //*
+  //更换零件部分
+  //*
+  //*
+
+  function getNumValue(value) {
+    if (
+      value == "" ||
+      value == undefined ||
+      value == null ||
+      isNaN(value) ||
+      value == "null" ||
+      parseFloat(value) == 0
+    ) {
+      value = 0;
+    }
+    return Math.round(value);
+  }
+
+  //添加零件，添加零件套餐之后的数组
+  const handelItem = (record) => {
+    console.log(type, "type");
+    if (Array.isArray(record)) {
+      const arr = [];
+      record.map((item, index) => {
+        arr.push({
+          ...item,
+          key: Math.random().toString(36).substr(3, 10),
+          ManhourItemName: item.ManHourItemName,
+        });
+      });
+
+      setDataSourceMeal([...arr, ...dataSourceMeal]);
+    } else {
+      setDataSourceMeal([
+        {
+          ...record,
+          SellQuantity: getNumValue(record?.Quantity),
+          SellPrice: getNumValue(record?.SellPrice1),
+          SellSum: getNumValue(
+            parseFloat(record?.SellPrice1) * parseFloat(record?.Quantity)
+          ),
+        },
+        ...dataSourceMeal,
+      ]);
+    }
+    setVisible(false);
+  };
+
+  //删除之后的数组
+  const get_Op_list = (list) => {
+    setDataSourceMeal(list);
+  };
+
+  const getKeyArr = (data) => {
+    setKeyArr(list);
+  };
+
   const componentsObj = {
     addProject: <AddPorject handelOK={handelOK} />,
     addMeal: <AddMeal handelOK={handelOK} />,
-    addItem: <AddItem handelOK={handelOK} />,
-    addItemMeal: <AddItemMeal handelOK={handelOK} />,
     dispatch: <DispatchModal handelOK={getPerson} />,
+
+    addItem: <AddItem handelOK={handelItem} />,
+    addItemMeal: <AddItemMeal handelOK={handelItem} />,
   };
 
-  const {
-    Corporation,
-    TBL_ManHourExpense,
-    TBL_RepairOrder,
-    TBL_RepairPartItem,
-    TBL_VehicleOwner,
-    TBL_Vehicleselect,
-  } = data;
+  const { TBL_RepairOrder } = data;
 
   return (
     <div className="EditPage">
@@ -286,6 +306,8 @@ export default function Edit(props) {
             form={form}
             tableColumns={tableColumns_two}
             dataSource={dataSourceMeal}
+            getlist={get_Op_list}
+            getRow={getKeyArr}
           />
         </Card>
         <Card title="温馨提示" style={{ marginBottom: "24px" }}>
