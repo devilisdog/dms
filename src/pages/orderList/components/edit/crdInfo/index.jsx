@@ -9,14 +9,14 @@ import {
   Tooltip,
   Modal,
   Table,
+  Tabs,
 } from "antd";
 import request from "@/utils/request";
 import Car_btn from "@/assets/img/car_btn.png";
-import { visible } from "chalk";
-// import Car_btn from "../../../../../assets/img/car_btn.png";
 
 const { TextArea } = Input;
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 export default function CrdInfo(props) {
   const [province, setProvince] = useState([]);
@@ -30,6 +30,7 @@ export default function CrdInfo(props) {
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState("");
   const [dataSource, setDataSource] = useState([]);
+  const [dataSource_other, setDataSource_other] = useState([]);
 
   useEffect(() => {
     request.get("/v1/province/list", {}).then((res) => {
@@ -87,8 +88,13 @@ export default function CrdInfo(props) {
     const params = {
       vehicleTag: props?.TBL_RepairOrder?.VehicleTag,
     };
-    request.get("/v1/vehicle/repair-part", { params }).then((res) => {
+
+    request.get("/v1/vehicle/repair-project", { params }).then((res) => {
       setDataSource(res?.data);
+    });
+
+    request.get("/v1/vehicle/repair-part", { params }).then((res) => {
+      setDataSource_other(res?.data);
     });
 
     setTitle("维修历史查询");
@@ -102,7 +108,16 @@ export default function CrdInfo(props) {
   const columns = [
     { title: "工单号", dataIndex: "RepairOrderCode" },
     { title: "开单日期", dataIndex: "CeateDate" },
-    { title: "进场里程", dataIndex: "EnterUse" },
+    { title: "进厂里程", dataIndex: "EnterUse" },
+    { title: "项目名称", dataIndex: "RepairItem" },
+    { title: "应收工时费", dataIndex: "count" },
+    { title: "班组", dataIndex: "ManhourExpense" },
+  ];
+
+  const columns_other = [
+    { title: "工单号", dataIndex: "RepairOrderCode" },
+    { title: "开单日期", dataIndex: "CeateDate" },
+    { title: "进厂里程", dataIndex: "EnterUse" },
     { title: "配件名称", dataIndex: "PartItem" },
     { title: "数量", dataIndex: "count" },
     { title: "应收金额", dataIndex: "ManhourExpense" },
@@ -314,13 +329,40 @@ export default function CrdInfo(props) {
         visible={visible}
       >
         <div style={{ height: "400px", overflowY: "scroll" }}>
-          <Table
-            dataSource={dataSource}
-            columns={columns}
-            rowKey={(record) => record.id}
-            scroll={{ x: 400 }}
-            pagination={false}
-          />
+          <Tabs defaultActiveKey="1" onChange={() => {}}>
+            <TabPane tab="维修项目历史" key="1">
+              <Table
+                dataSource={dataSource}
+                columns={columns}
+                rowKey={(record) => record.id}
+                scroll={{ x: 400 }}
+                pagination={false}
+                onRow={(record) => {
+                  return {
+                    onClick: (event) => {
+                      props.handelOK(record);
+                    }, // 点击行
+                  };
+                }}
+              />
+            </TabPane>
+            <TabPane tab="维修配件历史" key="2">
+              <Table
+                dataSource={dataSource_other}
+                columns={columns_other}
+                rowKey={(record) => record.id}
+                scroll={{ x: 400 }}
+                pagination={false}
+                onRow={(record) => {
+                  return {
+                    onClick: (event) => {
+                      props.handelOK(record);
+                    }, // 点击行
+                  };
+                }}
+              />
+            </TabPane>
+          </Tabs>
         </div>
       </Modal>
     </div>

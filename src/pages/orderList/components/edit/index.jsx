@@ -150,7 +150,6 @@ export default function Edit(props) {
       setDataSource([record, ...dataSource]);
     }
 
-    setRecord(record);
     setVisible(false);
   };
 
@@ -270,7 +269,7 @@ export default function Edit(props) {
           title="客户车辆信息"
           style={{ marginBottom: "24px", padding: "0" }}
         >
-          <CrdInfo form={form} {...data} />
+          <CrdInfo form={form} {...data} handelOK={setFormValue} />
         </Card>
         <Card title="维修措施" style={{ marginBottom: "24px" }}>
           <Button type="primary" onClick={() => showModal("addProject")}>
