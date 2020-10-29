@@ -68,51 +68,40 @@ const EditableCell = ({
   if (editable) {
     childNode = editing ? (
       <div>
-        {title === "首件(个)" || title === "续件(个)" ? (
+        {title === "维修措施" ? (
           <Form.Item
-            style={{
-              margin: 0,
-            }}
+            style={{ margin: 0 }}
             name={dataIndex}
-            rules={[
-              {
-                required: true,
-                message: `请输入${title}`,
-              },
-              {
-                validator: freightRule,
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: `请输入${title}`,
+            //   },
+            //   {
+            //     validator: freightRule,
+            //   },
+            // ]}
           >
-            <InputNumber
-              ref={inputRef}
-              onPressEnter={save}
-              onBlur={save}
-              precision={0}
-            />
+            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
           </Form.Item>
         ) : (
           <Form.Item
-            style={{
-              margin: 0,
-            }}
+            style={{ margin: 0 }}
             name={dataIndex}
-            rules={[
-              {
-                required: true,
-                message: `请输入${title}`,
-              },
-              {
-                validator: moneyRule,
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: `请输入${title}`,
+            //   },
+            //   {
+            //     validator: moneyRule,
+            //   },
+            // ]}
           >
             <InputNumber
               ref={inputRef}
               onPressEnter={save}
               onBlur={save}
-              // formatter={(value) => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              // parser={(value) => value.replace(/\¥\s?|(,*)/g, '')}
               precision={2}
             />
           </Form.Item>
@@ -139,6 +128,7 @@ export default class EditableTable extends React.Component {
     super(props);
     this.state = {
       dataSource: [],
+      selectedRowKeys: [],
       // count: 2,
     };
   }
@@ -166,19 +156,23 @@ export default class EditableTable extends React.Component {
     const dataSource = [...this.state.dataSource];
     this.setState({
       dataSource: dataSource.filter(
-        (item) => (item.key || item.region_no) !== key
+        (item) => (item.Id || item.region_no || item.key || item.ID) !== key
       ),
     });
 
     this.props.getlist(
-      dataSource.filter((item) => (item.key || item.region_no) !== key)
+      dataSource.filter(
+        (item) => (item.Id || item.region_no || item.key || item.ID) !== key
+      )
     );
   };
 
   handleSave = (row) => {
     const newData = [...this.state.dataSource];
     const index = newData.findIndex(
-      (item) => (row.key || row.region_no) === (item.key || item.region_no)
+      (item) =>
+        (row.Id || row.region_no || row.key || row.ID) ===
+        (item.Id || item.region_no || row.key || row.ID)
     );
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
@@ -195,10 +189,10 @@ export default class EditableTable extends React.Component {
       title: "操作",
       dataIndex: "operation",
       render: (text, record) => {
-        const key = record.key || record.region_no;
+        const key = record.Id || record.region_no || record.key || record.ID;
         return (
           <Popconfirm
-            title="确定删除此条配送区域?"
+            title="确定删除数据?"
             onConfirm={() => this.handleDelete(key)}
           >
             <span style={{ color: "red" }}>删除</span>
@@ -208,9 +202,13 @@ export default class EditableTable extends React.Component {
     },
   ];
 
+  onSelectChange = (selectedRowKeys, selectedRow) => {
+    this.props.getRow(selectedRowKeys);
+    this.setState({ selectedRowKeys });
+  };
+
   render() {
-    const { dataSource } = this.state;
-    console.log(this.props, "props");
+    const { dataSource, selectedRowKeys } = this.state;
     const components = {
       body: {
         row: EditableRow,
@@ -233,16 +231,22 @@ export default class EditableTable extends React.Component {
         }),
       };
     });
+
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
     return (
       <div>
         <Table
+          rowSelection={rowSelection}
           components={components}
           rowClassName={() => "editable-row"}
           bordered
           dataSource={dataSource}
           columns={columns}
           pagination={false}
-          rowKey={(record) => record.ID}
+          rowKey={(record) => record.key || record.Id || record.ID}
         />
       </div>
     );
