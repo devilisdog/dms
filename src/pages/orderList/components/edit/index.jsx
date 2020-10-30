@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Descriptions, Form, Button, Modal, Radio } from "antd";
+import { Card, Divider, Form, Button, Modal, Radio } from "antd";
 import moment from "moment";
 import CrdInfo from "./crdInfo";
 import EditTable from "@/components/EditTable";
@@ -54,8 +54,6 @@ export default function Edit(props) {
   const [dataSource, setDataSource] = useState([]);
   const [dataSourceMeal, setDataSourceMeal] = useState([]);
 
-  const [record, setRecord] = useState({});
-
   const [row, setRow] = useState([]);
 
   const searchDetail = () => {
@@ -101,8 +99,14 @@ export default function Edit(props) {
         RunMileage: TBL_Vehicleselect?.RunMileage,
         NextServiceMileage: TBL_Vehicleselect?.NextServiceMileage,
         RepairTypeName: TBL_RepairOrder?.RepairTypeName,
-        NextServiceDate: TBL_Vehicleselect?.NextServiceDate,
+        NextServiceDate: moment(
+          TBL_Vehicleselect?.NextServiceDate,
+          "YYYY-MM-DD"
+        ),
         Remark: TBL_RepairOrder?.Remark,
+
+        IsReserveOldPart: TBL_RepairOrder?.IsReserveOldPart,
+        IsWash: TBL_RepairOrder?.IsWash,
       };
 
       form.setFieldsValue(initialValues);
@@ -253,32 +257,37 @@ export default function Edit(props) {
 
   const { TBL_RepairOrder } = data;
 
+  const titleDom = (name) => {
+    return (
+      <div>
+        <div style={{ fontSize: "16px" }}>{name}</div>
+        <Divider className="divider" />
+      </div>
+    );
+  };
+
   return (
     <div className="EditPage">
       <div className="page_title">XXX汽车销售服务有限公司</div>
+      <div>工单号： {TBL_RepairOrder?.TBL_RepairOrder}</div>
+      <div>开单时间： {TBL_RepairOrder?.CreateDate}</div>
+      <div>服务顾问：{TBL_RepairOrder?.EditBy}</div>
       <Form form={form} {...layout}>
-        <Descriptions>
-          <Descriptions.Item label="工单号">
-            {TBL_RepairOrder?.TBL_RepairOrder}
-          </Descriptions.Item>
-          <Descriptions.Item label="开单时间">
-            {TBL_RepairOrder?.CreateDate}
-          </Descriptions.Item>
-          <Descriptions.Item label="服务顾问">
-            {TBL_RepairOrder?.EditBy}
-          </Descriptions.Item>
-        </Descriptions>
-        <Card
-          title="客户车辆信息"
-          style={{ marginBottom: "24px", padding: "0" }}
-        >
+        <div className="title_box">
+          {titleDom("一.客户车辆信息")}
           <CrdInfo form={form} {...data} handelOK={setFormValue} />
-        </Card>
-        <Card title="维修措施" style={{ marginBottom: "24px" }}>
+        </div>
+
+        <div className="title_box">
+          {titleDom("二.维修措施")}
           <Button type="primary" onClick={() => showModal("addProject")}>
             新增项目
           </Button>
-          <Button type="primary" onClick={() => showModal("addMeal")}>
+          <Button
+            type="primary"
+            onClick={() => showModal("addMeal")}
+            style={{ margin: "0 5px" }}
+          >
             新增套餐
           </Button>
           <Button
@@ -295,10 +304,15 @@ export default function Edit(props) {
             getlist={getlist}
             getRow={getRow}
           />
-        </Card>
+        </div>
 
-        <Card title="更换零件" style={{ marginBottom: "24px" }}>
-          <Button type="primary" onClick={() => showModal("addItem")}>
+        <div className="title_box">
+          {titleDom("三.更换零件")}
+          <Button
+            type="primary"
+            onClick={() => showModal("addItem")}
+            style={{ marginRight: "5px" }}
+          >
             新增零件
           </Button>
           <Button type="primary" onClick={() => showModal("addItemMeal")}>
@@ -311,9 +325,11 @@ export default function Edit(props) {
             getlist={get_Op_list}
             getRow={getKeyArr}
           />
-        </Card>
-        <Card title="温馨提示" style={{ marginBottom: "24px" }}>
-          <Form.Item label="">
+        </div>
+
+        <div className="title_box">
+          {titleDom("温馨提示")}
+          <Form.Item label="" style={{ margin: "0" }}>
             <p>
               1.本人同意按贵站工单所列的修理项目修理，愿意支付有关项目需要更关的零件款及维修费。
             </p>
@@ -325,42 +341,64 @@ export default function Edit(props) {
           </Form.Item>
 
           <p>
-            4.旧件是否带走
+            <span style={{ verticalAlign: "-webkit-baseline-middle" }}>
+              4.旧件是否带走：
+            </span>
             <Form.Item
               label=""
               colon={false}
-              style={{ display: "inline-block" }}
+              name="IsReserveOldPart"
+              style={{ display: "inline-block", margin: "0" }}
             >
-              <Radio.Group style={{ width: "100px" }}>
-                <Radio value={1}>是</Radio>
-                <Radio value={2}>否</Radio>
+              <Radio.Group style={{ width: "150px" }}>
+                <Radio value={"是"}>是</Radio>
+                <Radio value={"否"}>否</Radio>
               </Radio.Group>
             </Form.Item>
           </p>
 
           <p>
-            5.是否洗车
+            <span style={{ verticalAlign: "-webkit-baseline-middle" }}>
+              5.是否洗车：
+            </span>
+
             <Form.Item
               label=""
               colon={false}
-              style={{ display: "inline-block" }}
+              name="IsWash"
+              style={{ display: "inline-block", margin: "0" }}
             >
-              <Radio.Group>
-                <Radio value={1}>是</Radio>
-                <Radio value={2}>否</Radio>
+              <Radio.Group style={{ width: "150px" }}>
+                <Radio value={"是"}>是</Radio>
+                <Radio value={"否"}>否</Radio>
               </Radio.Group>
             </Form.Item>
           </p>
-        </Card>
-        <Card title="客户签署" style={{ marginBottom: "24px" }}>
+        </div>
+
+        <div className="title_box">
+          {titleDom("客户签署")}
           客户签署：入站：_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           出站：_________&nbsp;&nbsp;&nbsp; 日期：_____年_____月_____日
           <p style={{ marginTop: "12px" }}>
             投诉:13825251430地址:深圳市宝安区XX路XX号
           </p>
-        </Card>
+        </div>
       </Form>
-
+      <div
+        style={{
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ width: "200px" }}>
+          <Button type="primary" style={{ marginRight: "10px" }}>
+            保存工单
+          </Button>
+          <Button>预览工单</Button>
+        </div>
+      </div>
       <Modal
         title={title}
         visible={visible}

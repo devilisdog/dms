@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table } from "antd";
+import { Button, Table, Form, Select, Input } from "antd";
 import request from "@/utils/request";
+import { SearchOutlined } from "@ant-design/icons";
+import { values } from "lodash";
+const { Option } = Select;
 
 export default function OrderList(props) {
+  const { lookData } = props;
+  const [form] = Form.useForm();
+
   const [dataSource, setDataSource] = useState([]);
 
-  const search = (page = 1, pageSize = 10) => {
+  const search = (page = 1, pageSize = 10, formdata = {}) => {
     const params = {
       page,
       pageSize,
-      // ...formdata,
+      ...formdata,
     };
     request.get("/v1/order/list", { params }).then((res) => {
       setDataSource(res?.data);
@@ -38,21 +44,92 @@ export default function OrderList(props) {
       align: "center",
       render: (text, record) => {
         return (
-          <Button
-            type="primary"
-            onClick={() => {
-              props.history.push(`/orderList/edit/${record.RepairOrderCode}`);
-            }}
-          >
-            编辑
-          </Button>
+          <>
+            {lookData ? (
+              <Button
+                type="primary"
+                onClick={() => {
+                  //   props.history.push(
+                  //     `/orderList/edit/${record.RepairOrderCode}`
+                  //   );
+                }}
+              >
+                查看
+              </Button>
+            ) : (
+              <Button
+                type="primary"
+                onClick={() => {
+                  props.history.push(
+                    `/orderList/edit/${record.RepairOrderCode}`
+                  );
+                }}
+              >
+                编辑
+              </Button>
+            )}
+          </>
         );
       },
     },
   ];
 
+  const searchTable = () => {
+    form.validateFields().then((values) => {
+      search(1, 10, values);
+    });
+  };
+
+  const prefixSelector = (
+    <Form.Item name="search_type" noStyle>
+      <Select style={{ width: "90px" }}>
+        <Option value="">请选择</Option>
+        <Option value="VehicleTag">按车牌号</Option>
+        <Option value="CarOwnerName">按客户名称</Option>
+        <Option value="RepairOrderCode">按工单号</Option>
+        <Option value="Name">服务顾问</Option>
+        <Option value="UnderpanCode">车架号</Option>
+      </Select>
+    </Form.Item>
+  );
+
+  const initialValues = {
+    time: "请选择",
+    search_type: "请选择",
+  };
+
   return (
     <div>
+      {lookData ? (
+        <Form form={form} initialValues={initialValues}>
+          <Form.Item
+            name="time"
+            style={{ display: "inline-block", marginRight: "5px" }}
+          >
+            <Select style={{ width: "90px" }}>
+              <Option value={""}>请选择</Option>
+              <Option value={7}>一周内</Option>
+              <Option value={30}>一个月内</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item name="search_word" style={{ display: "inline-block" }}>
+            <Input addonBefore={prefixSelector} style={{ width: "200px" }} />
+          </Form.Item>
+          <SearchOutlined
+            twoToneColor="#1890ff"
+            style={{
+              fontSize: "24px",
+              marginLeft: "5px",
+              verticalAlign: "baseline-middle",
+              verticalAlign: "-webkit-baseline-middle",
+              cursor: "pointer",
+            }}
+            onClick={searchTable}
+          />
+        </Form>
+      ) : null}
+
       <Table columns={columns} dataSource={dataSource} />
     </div>
   );

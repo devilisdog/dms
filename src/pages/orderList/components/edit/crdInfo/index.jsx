@@ -32,6 +32,8 @@ export default function CrdInfo(props) {
   const [dataSource, setDataSource] = useState([]);
   const [dataSource_other, setDataSource_other] = useState([]);
 
+  const [repairtypes, setrepairTypes] = useState([]);
+
   useEffect(() => {
     request.get("/v1/province/list", {}).then((res) => {
       setProvince(res.data);
@@ -39,6 +41,11 @@ export default function CrdInfo(props) {
 
     request.get("/v1/car/brands", {}).then((res) => {
       setBrands(res.data);
+    });
+
+    //维修类型下拉
+    request.get("/v1/repair/types", {}).then((res) => {
+      setrepairTypes(res?.data);
     });
   }, []);
 
@@ -64,8 +71,9 @@ export default function CrdInfo(props) {
     });
   };
 
+  //品牌
   const onChangeSeries = (e) => {
-    // props.form.setFieldsValue({  });
+    props.form.setFieldsValue({ CarSeriesCode: "", CarTypeCode: "" });
     const params = {
       code: e,
     };
@@ -75,7 +83,7 @@ export default function CrdInfo(props) {
   };
 
   const onChangeType = (e) => {
-    // props.form.setFieldsValue({  });
+    props.form.setFieldsValue({ CarTypeCode: "" });
     const params = {
       code: e,
     };
@@ -127,7 +135,7 @@ export default function CrdInfo(props) {
     <div className="CrdInfo">
       <Form.Item label="车牌号">
         <Form.Item name="VehicleTag" noStyle>
-          <Input style={{ width: "100px" }} />
+          <Input style={{ width: "200px" }} />
         </Form.Item>
         <Tooltip>
           <img
@@ -139,189 +147,137 @@ export default function CrdInfo(props) {
           />
         </Tooltip>
       </Form.Item>
-
+      <Form.Item label="发动机号" name="EngineCode">
+        <Input />
+      </Form.Item>
+      <Form.Item label="品牌" name="CarBrandCode">
+        <Select onChange={onChangeSeries}>
+          {brands.map((ele, index) => {
+            return (
+              <Option value={ele.CarBrandCode} key={ele.Sort}>
+                {ele.CarBrandCode}
+              </Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+      <Form.Item label="车系" name="CarSeriesCode">
+        <Select onChange={onChangeType}>
+          {series.map((ele, index) => {
+            return (
+              <Option value={ele.CarSeriesCode} key={ele.Sort}>
+                {ele.CarSeriesCode}
+              </Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+      <Form.Item label="车型" name=" CarTypeCode">
+        <Select>
+          {types.map((ele, index) => {
+            return (
+              <Option value={ele.CarTypeCode} key={ele.Sort}>
+                {ele.CarTypeCode}
+              </Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+      <Form.Item label="VIN" name="UnderPan">
+        <Input />
+      </Form.Item>
+      <Form.Item label="购车日期" name="BuyDate">
+        <DatePicker style={{ width: "100%" }} />
+      </Form.Item>
+      <Form.Item label="进站里程" name="RunMileage">
+        <Input />
+      </Form.Item>
+      <Form.Item label="维修类型" name="RepairTypeName">
+        <Select>
+          {repairtypes.map((ele, index) => {
+            return (
+              <Option value={ele.RepairTypeName} key={ele.Sort}>
+                {ele.RepairTypeName}
+              </Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
       <Form.Item label="客户名称" name="CarOwnerName">
         <Input />
       </Form.Item>
 
-      <Row>
-        <Col span={12}>
-          <Form.Item label="发动机号" name="EngineCode">
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="区域">
-            <Input.Group compact>
-              <Form.Item name="Province" noStyle>
-                <Select
-                  placeholder="请选择市"
-                  onChange={onChangeProvince}
-                  style={{ width: "90px" }}
-                >
-                  {province.map((ele, index) => {
-                    return (
-                      <Option value={ele.Province} key={ele.ID}>
-                        {ele.Province}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-              <Form.Item name="City" noStyle>
-                <Select
-                  placeholder="请选择区"
-                  onChange={onChangeCity}
-                  style={{ width: "90px" }}
-                >
-                  {city.map((ele, index) => {
-                    return (
-                      <Option value={ele.City} key={ele.ID}>
-                        {ele.City}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-              <Form.Item name="Area" noStyle>
-                <Select placeholder="请选择镇" style={{ width: "90px" }}>
-                  {area.map((ele, index) => {
-                    return (
-                      <Option value={ele.AreaName} key={ele.ID}>
-                        {ele.AreaName}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </Input.Group>
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={12}>
-          <Form.Item label="品牌" name="CarBrandCode">
-            <Select onChange={onChangeSeries}>
-              {brands.map((ele, index) => {
+      <Form.Item label="区域" className="area">
+        <Input.Group compact>
+          <Form.Item name="Province" noStyle>
+            <Select
+              placeholder="请选择市"
+              onChange={onChangeProvince}
+              style={{ width: "90px" }}
+            >
+              {province.map((ele, index) => {
                 return (
-                  <Option value={ele.CarBrandCode} key={ele.Sort}>
-                    {ele.CarBrandCode}
+                  <Option value={ele.Province} key={ele.ID}>
+                    {ele.Province}
                   </Option>
                 );
               })}
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="客户地址" name="Address">
-            <Input />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={12}>
-          <Form.Item label="车系" name="CarSeriesCode">
-            <Select onChange={onChangeType}>
-              {series.map((ele, index) => {
+          <Form.Item name="City" noStyle>
+            <Select
+              placeholder="请选择区"
+              onChange={onChangeCity}
+              style={{ width: "90px" }}
+            >
+              {city.map((ele, index) => {
                 return (
-                  <Option value={ele.CarSeriesCode} key={ele.Sort}>
-                    {ele.CarSeriesCode}
+                  <Option value={ele.City} key={ele.ID}>
+                    {ele.City}
                   </Option>
                 );
               })}
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="手机号码" name="Mobile">
-            <Input />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={12}>
-          <Form.Item label="车型" name=" CarTypeCode">
-            <Select>
-              {types.map((ele, index) => {
+          <Form.Item name="Area" noStyle>
+            <Select placeholder="请选择镇" style={{ width: "90px" }}>
+              {area.map((ele, index) => {
                 return (
-                  <Option value={ele.CarTypeCode} key={ele.Sort}>
-                    {ele.CarTypeCode}
+                  <Option value={ele.AreaName} key={ele.ID}>
+                    {ele.AreaName}
                   </Option>
                 );
               })}
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="送修人" name="RepairSender">
-            <Input />
-          </Form.Item>
-        </Col>
-      </Row>
+        </Input.Group>
+      </Form.Item>
+      <Form.Item label="客户地址" name="Address">
+        <Input />
+      </Form.Item>
+      <Form.Item label="手机号码" name="Mobile">
+        <Input />
+      </Form.Item>
+      <Form.Item label="送修人" name="RepairSender">
+        <Input />
+      </Form.Item>
+      <Form.Item label="联系电话" name="Telephone1">
+        <Input />
+      </Form.Item>
+      <Form.Item label="预交车时间" name="IntendingHandTime">
+        <DatePicker style={{ width: "100%" }} />
+      </Form.Item>
 
-      <Row>
-        <Col span={12}>
-          <Form.Item label="VIN" name="UnderPan">
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="联系电话" name="Telephone1">
-            <Input />
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item label="下次保养里程" name="NextServiceMileage">
+        <Input />
+      </Form.Item>
 
-      <Row>
-        <Col span={12}>
-          <Form.Item label="购车日期" name="BuyDate">
-            <DatePicker />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="预交车时间" name="IntendingHandTime">
-            <DatePicker />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={12}>
-          <Form.Item label="进站里程" name="RunMileage">
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="下次保养里程" name="NextServiceMileage">
-            <Input />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={12}>
-          <Form.Item label="维修类型" name="RepairTypeName">
-            <Select />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="下次保养日" name="NextServiceDate">
-            <Select />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={12}>
-          <Form.Item label="备注" name="Remark">
-            <TextArea />
-          </Form.Item>
-        </Col>
-      </Row>
-
+      <Form.Item label="下次保养日" name="NextServiceDate">
+        <DatePicker style={{ width: "100%" }} />
+      </Form.Item>
+      <Form.Item label="备注" name="Remark">
+        <TextArea />
+      </Form.Item>
       <Modal
         title={title}
         onOk={handok}
