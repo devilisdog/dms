@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Table, Form, Select, Input } from "antd";
 import request from "@/utils/request";
 import { SearchOutlined } from "@ant-design/icons";
-import { values } from "lodash";
 const { Option } = Select;
 
 export default function OrderList(props) {
@@ -49,9 +48,9 @@ export default function OrderList(props) {
               <Button
                 type="primary"
                 onClick={() => {
-                  //   props.history.push(
-                  //     `/orderList/edit/${record.RepairOrderCode}`
-                  //   );
+                  props.history.push(
+                    `/searchList/lookPage/${record.RepairOrderCode}`
+                  );
                 }}
               >
                 查看

@@ -85,6 +85,13 @@ export default defineConfig({
             },
 
             {
+              // name: '维修记录查看',
+              // icon: 'table',
+              path: "/searchList/lookPage/:id",
+              component: "./searchList/lookPage",
+            },
+
+            {
               component: "./404",
             },
           ],
