@@ -30,10 +30,11 @@ const Login = (props) => {
     const params = {
       ...values,
     };
+
     request("/v1/login", {
-      method: "post",
+      method: "POST",
       data: params,
-      requestType: "form",
+      // requestType: "form",
     })
       .then((res) => {
         localStorage.setItem("token", res.data.token);

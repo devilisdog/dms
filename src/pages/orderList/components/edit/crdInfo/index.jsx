@@ -143,6 +143,13 @@ export default function CrdInfo(props) {
   };
 
   const handelOK = (record) => {
+    // if (modalType == "crdInfoTable") {
+    //   getleftForm(record);
+    // }
+    // if (modalType == "customer") {
+    //   getrightForm(record);
+    // }
+
     setVisible(false);
   };
 
@@ -195,6 +202,9 @@ export default function CrdInfo(props) {
 
               props.form.setFieldsValue({
                 ...record,
+                CreateDate: record?.CreateDate,
+                CarOwnerCode: record?.CarOwnerCode,
+                ID: record?.ID,
                 BuyDate: record?.BuyDate
                   ? moment(record?.BuyDate, "YYYY-MM-DD")
                   : "",
@@ -246,6 +256,8 @@ export default function CrdInfo(props) {
 
               props.form.setFieldsValue({
                 ...record,
+                CarOwnerCode_right: record?.CarOwnerCode,
+                CreateDate: record?.CreateDate,
                 BuyDate: record?.BuyDate
                   ? moment(record?.BuyDate, "YYYY-MM-DD")
                   : "",
@@ -319,7 +331,7 @@ export default function CrdInfo(props) {
             <Input
               disabled={props.form.getFieldValue("CarOwnerName") ? true : false}
               addonAfter={
-                props.newBuild ? (
+                props.newBuild && !props.form.getFieldValue("CarOwnerName") ? (
                   <img
                     src={Car_btn}
                     style={{
@@ -433,7 +445,7 @@ export default function CrdInfo(props) {
       </Row>
       <Row>
         <Col span={12}>
-          <Form.Item label="车型" name=" CarTypeCode">
+          <Form.Item label="车型" name="CarTypeCode">
             <Select>
               {types.map((ele, index) => {
                 return (
@@ -453,7 +465,11 @@ export default function CrdInfo(props) {
       </Row>
       <Row>
         <Col span={12}>
-          <Form.Item label="VIN" name="UnderPan">
+          <Form.Item
+            label="VIN"
+            name="UnderPan"
+            rules={[{ required: true, message: "VIN必填" }]}
+          >
             <Input />
           </Form.Item>
         </Col>
@@ -489,11 +505,15 @@ export default function CrdInfo(props) {
       </Row>
       <Row>
         <Col span={12}>
-          <Form.Item label="维修类型" name="RepairTypeName">
+          <Form.Item
+            label="维修类型"
+            name="RepairTypeName"
+            rules={[{ required: true, message: "请选择维修类型" }]}
+          >
             <Select>
               {repairtypes.map((ele, index) => {
                 return (
-                  <Option value={ele.RepairTypeName} key={ele.Sort}>
+                  <Option value={ele.RepairTypeCode} key={ele.Sort}>
                     {ele.RepairTypeName}
                   </Option>
                 );
@@ -525,6 +545,30 @@ export default function CrdInfo(props) {
           </Modal>
         </Col>
       </Row>
+      <Form.Item
+        label=""
+        name="CarOwnerCode"
+        colon={false}
+        style={{ display: "none" }}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label=" "
+        name="CarOwnerCode_right"
+        style={{ display: "none" }}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item label=" " name="CreateDate" style={{ display: "none" }}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item label=" " name="ID" style={{ display: "none" }}>
+        <Input />
+      </Form.Item>
     </div>
   );
 }

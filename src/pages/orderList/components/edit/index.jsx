@@ -57,6 +57,9 @@ export default function Edit(props) {
 
   const [row, setRow] = useState([]);
 
+  const [leftForm, setleftForm] = useState({});
+  const [rightForm, setrightForm] = useState({});
+
   const searchDetail = () => {
     const params = {
       code: code,
@@ -172,12 +175,20 @@ export default function Edit(props) {
 
   //派工后修改数组
   const getPerson = (personRecord) => {
+    console.log(personRecord, "personRecord");
     const newData = _.cloneDeep(dataSource);
 
     dataSource.map((ele, index) => {
       row.map((item) => {
-        if (ele.Id == item || ele.ID == item) {
-          newData.splice(index, 1, { ...ele, person: personRecord.Name });
+        if (ele.Id == item || ele.ID == item || ele.key == item) {
+          newData.splice(index, 1, {
+            ...ele,
+            person: personRecord.Name,
+            p_WorkTypeCode: personRecord.WorkTypeCode,
+            p_GH: personRecord.Gh,
+            p_WorkPosition: personRecord.WorkPosition,
+            p_WorkGroup: personRecord.WorkGroup,
+          });
         }
       });
     });
@@ -248,6 +259,42 @@ export default function Edit(props) {
   //表格填充
   const setFormValue = () => {};
 
+  const getleftForm = (data) => {
+    setleftForm(data);
+  };
+
+  const getrightForm = (data) => {
+    setrightForm(data);
+  };
+
+  //新建表单
+  const submit = () => {
+    form.validateFields().then((values) => {
+      const obj = {
+        ...values,
+        BuyDate: moment(values.BuyDate).format("YYYY-MM-DD"),
+        IntendingHandTime: moment(values.IntendingHandTime).format(
+          "YYYY-MM-DD"
+        ),
+        NextServiceDate: moment(values.NextServiceDate).format("YYYY-MM-DD"),
+      };
+
+      const formData = {
+        carOwnerInfo: obj,
+        postRepairItem: dataSource,
+        postPartItem: dataSourceMeal,
+      };
+
+      request("/v1/order/create", {
+        method: "POST",
+        data: formData,
+        // requestType: "form",
+      }).then((res) => {
+        console.log(res, "res");
+      });
+    });
+  };
+
   const componentsObj = {
     addProject: <AddPorject handelOK={handelOK} />,
     addMeal: <AddMeal handelOK={handelOK} />,
@@ -277,7 +324,14 @@ export default function Edit(props) {
       <Form form={form} {...layout}>
         <div className="title_box">
           {titleDom("一.客户车辆信息")}
-          <CrdInfo form={form} {...data} handelOK={setFormValue} {...props} />
+          <CrdInfo
+            form={form}
+            {...data}
+            handelOK={setFormValue}
+            {...props}
+            getleftForm={getleftForm}
+            getrightForm={getrightForm}
+          />
         </div>
 
         <div className="title_box">
@@ -351,6 +405,7 @@ export default function Edit(props) {
               colon={false}
               name="IsReserveOldPart"
               style={{ display: "inline-block", margin: "0" }}
+              rules={[{ required: true, message: "此项必填" }]}
             >
               <Radio.Group style={{ width: "150px" }}>
                 <Radio value={"是"}>是</Radio>
@@ -369,6 +424,7 @@ export default function Edit(props) {
               colon={false}
               name="IsWash"
               style={{ display: "inline-block", margin: "0" }}
+              rules={[{ required: true, message: "此项必填" }]}
             >
               <Radio.Group style={{ width: "150px" }}>
                 <Radio value={"是"}>是</Radio>
@@ -396,7 +452,9 @@ export default function Edit(props) {
             justifyContent: "center",
           }}
         >
-          <Button type="primary">保存工单</Button>
+          <Button type="primary" onClick={submit}>
+            保存工单
+          </Button>
         </div>
       ) : (
         <div
