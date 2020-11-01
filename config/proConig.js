@@ -1,6 +1,6 @@
-export const dev_base_url = 'http://106.52.154.94/';
-export const test_base_url = 'http://106.52.154.94/';
-export const uat_base_url = 'http://106.52.154.94/';
+export const dev_base_url = 'http://106.52.154.941/';
+export const test_base_url = 'http://106.52.154.942/';
+export const uat_base_url = 'http://106.52.154.943/';
 export const prod_base_url = 'http://106.52.154.94/';
 
 let base_url;
