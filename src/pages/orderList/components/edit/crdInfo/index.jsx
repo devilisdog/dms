@@ -13,6 +13,9 @@ import {
 } from "antd";
 import request from "@/utils/request";
 import Car_btn from "@/assets/img/car_btn.png";
+import more_icon from "@/assets/img/more_icon.png";
+
+import moment from "moment";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -33,6 +36,12 @@ export default function CrdInfo(props) {
   const [dataSource_other, setDataSource_other] = useState([]);
 
   const [repairtypes, setrepairTypes] = useState([]);
+
+  const [carList, setCarList] = useState([]);
+
+  const [modalType, setModalType] = useState("");
+
+  const [ccustomerList, setCcustomerList] = useState([]);
 
   useEffect(() => {
     request.get("/v1/province/list", {}).then((res) => {
@@ -93,23 +102,47 @@ export default function CrdInfo(props) {
   };
 
   const showModal = (type) => {
-    const params = {
-      vehicleTag: props?.TBL_RepairOrder?.VehicleTag,
-    };
+    setModalType(type);
 
-    request.get("/v1/vehicle/repair-project", { params }).then((res) => {
-      setDataSource(res?.data);
-    });
+    if (type == "crdInfoTable") {
+      const params = {
+        vehicleTag: "",
+      };
+      request.get("/v1/vehicle/list", { params }).then((res) => {
+        setCarList(res?.data);
+      });
 
-    request.get("/v1/vehicle/repair-part", { params }).then((res) => {
-      setDataSource_other(res?.data);
-    });
+      setTitle("选择车辆信息");
+    }
 
-    setTitle("维修历史查询");
+    if (type == "carCard") {
+      const params = {
+        vehicleTag: props?.TBL_RepairOrder?.VehicleTag,
+      };
+      request.get("/v1/vehicle/repair-project", { params }).then((res) => {
+        setDataSource(res?.data);
+      });
+      request.get("/v1/vehicle/repair-part", { params }).then((res) => {
+        setDataSource_other(res?.data);
+      });
+      setTitle("维修历史查询");
+    }
+
+    if (type == "customer") {
+      const params = {
+        carOwnerCode: "",
+      };
+      request.get("/v1/company/customer", { params }).then((res) => {
+        setCcustomerList(res?.data);
+      });
+
+      setTitle("选择客户");
+    }
+
     setVisible(true);
   };
 
-  const handok = () => {
+  const handelOK = (record) => {
     setVisible(false);
   };
 
@@ -131,196 +164,367 @@ export default function CrdInfo(props) {
     { title: "应收金额", dataIndex: "ManhourExpense" },
   ];
 
+  const columns_crdinfo = [
+    { title: "车牌号", dataIndex: "VehicleTag" },
+    { title: "客户名称", dataIndex: "CarOwnerName" },
+    { title: "车架号", dataIndex: "UnderPan" },
+    { title: "品牌", dataIndex: "CarBrandCode" },
+    { title: "公司网点", dataIndex: "AutoCompany" },
+  ];
+
+  const columns_customer = [
+    { title: "客户编号", dataIndex: "CarOwnerCode" },
+    { title: "客户姓名", dataIndex: "CarOwnerName" },
+    { title: "客户手机", dataIndex: "Mobile" },
+    { title: "建档人姓名", dataIndex: "ContractDeadline" },
+  ];
+
+  const components = {
+    crdInfoTable: (
+      <Table
+        columns={columns_crdinfo}
+        dataSource={carList}
+        pagination={false}
+        scroll={{ x: 400 }}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              handelOK(record);
+
+              props.form.resetFields();
+
+              props.form.setFieldsValue({
+                ...record,
+                BuyDate: record?.BuyDate
+                  ? moment(record?.BuyDate, "YYYY-MM-DD")
+                  : "",
+                IntendingHandTime: record?.IntendingHandTime
+                  ? moment(record?.IntendingHandTime, "YYYY-MM-DD")
+                  : "",
+                NextServiceDate: record?.NextServiceDate
+                  ? moment(record?.NextServiceDate, "YYYY-MM-DD")
+                  : "",
+              });
+            }, // 点击行
+          };
+        }}
+      />
+    ),
+    carCard: (
+      <Tabs defaultActiveKey="1" onChange={() => {}}>
+        <TabPane tab="维修项目历史" key="1">
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            rowKey={(record) => record.id}
+            scroll={{ x: 400 }}
+            pagination={false}
+          />
+        </TabPane>
+        <TabPane tab="维修配件历史" key="2">
+          <Table
+            dataSource={dataSource_other}
+            columns={columns_other}
+            rowKey={(record) => record.id}
+            scroll={{ x: 400 }}
+            pagination={false}
+          />
+        </TabPane>
+      </Tabs>
+    ),
+    customer: (
+      <Table
+        columns={columns_customer}
+        dataSource={ccustomerList}
+        pagination={false}
+        scroll={{ x: 400 }}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              handelOK(record);
+              props.form.resetFields();
+
+              props.form.setFieldsValue({
+                ...record,
+                BuyDate: record?.BuyDate
+                  ? moment(record?.BuyDate, "YYYY-MM-DD")
+                  : "",
+                IntendingHandTime: record?.IntendingHandTime
+                  ? moment(record?.IntendingHandTime, "YYYY-MM-DD")
+                  : "",
+                NextServiceDate: record?.NextServiceDate
+                  ? moment(record?.NextServiceDate, "YYYY-MM-DD")
+                  : "",
+              });
+            }, // 点击行
+          };
+        }}
+      />
+    ),
+  };
+
   return (
     <div className="CrdInfo">
-      <Form.Item label="车牌号">
-        <Form.Item name="VehicleTag" noStyle>
-          <Input style={{ width: "200px" }} />
-        </Form.Item>
-        <Tooltip>
-          <img
-            src={Car_btn}
-            style={{ width: "30px", height: "30px", cursor: "pointer" }}
-            onClick={() => {
-              showModal("carCard");
-            }}
-          />
-        </Tooltip>
-      </Form.Item>
-      <Form.Item label="发动机号" name="EngineCode">
-        <Input />
-      </Form.Item>
-      <Form.Item label="品牌" name="CarBrandCode">
-        <Select onChange={onChangeSeries}>
-          {brands.map((ele, index) => {
-            return (
-              <Option value={ele.CarBrandCode} key={ele.Sort}>
-                {ele.CarBrandCode}
-              </Option>
-            );
-          })}
-        </Select>
-      </Form.Item>
-      <Form.Item label="车系" name="CarSeriesCode">
-        <Select onChange={onChangeType}>
-          {series.map((ele, index) => {
-            return (
-              <Option value={ele.CarSeriesCode} key={ele.Sort}>
-                {ele.CarSeriesCode}
-              </Option>
-            );
-          })}
-        </Select>
-      </Form.Item>
-      <Form.Item label="车型" name=" CarTypeCode">
-        <Select>
-          {types.map((ele, index) => {
-            return (
-              <Option value={ele.CarTypeCode} key={ele.Sort}>
-                {ele.CarTypeCode}
-              </Option>
-            );
-          })}
-        </Select>
-      </Form.Item>
-      <Form.Item label="VIN" name="UnderPan">
-        <Input />
-      </Form.Item>
-      <Form.Item label="购车日期" name="BuyDate">
-        <DatePicker style={{ width: "100%" }} />
-      </Form.Item>
-      <Form.Item label="进站里程" name="RunMileage">
-        <Input />
-      </Form.Item>
-      <Form.Item label="维修类型" name="RepairTypeName">
-        <Select>
-          {repairtypes.map((ele, index) => {
-            return (
-              <Option value={ele.RepairTypeName} key={ele.Sort}>
-                {ele.RepairTypeName}
-              </Option>
-            );
-          })}
-        </Select>
-      </Form.Item>
-      <Form.Item label="客户名称" name="CarOwnerName">
-        <Input />
-      </Form.Item>
-
-      <Form.Item label="区域" className="area">
-        <Input.Group compact>
-          <Form.Item name="Province" noStyle>
-            <Select
-              placeholder="请选择市"
-              onChange={onChangeProvince}
-              style={{ width: "90px" }}
-            >
-              {province.map((ele, index) => {
-                return (
-                  <Option value={ele.Province} key={ele.ID}>
-                    {ele.Province}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item name="City" noStyle>
-            <Select
-              placeholder="请选择区"
-              onChange={onChangeCity}
-              style={{ width: "90px" }}
-            >
-              {city.map((ele, index) => {
-                return (
-                  <Option value={ele.City} key={ele.ID}>
-                    {ele.City}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item name="Area" noStyle>
-            <Select placeholder="请选择镇" style={{ width: "90px" }}>
-              {area.map((ele, index) => {
-                return (
-                  <Option value={ele.AreaName} key={ele.ID}>
-                    {ele.AreaName}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-        </Input.Group>
-      </Form.Item>
-      <Form.Item label="客户地址" name="Address">
-        <Input />
-      </Form.Item>
-      <Form.Item label="手机号码" name="Mobile">
-        <Input />
-      </Form.Item>
-      <Form.Item label="送修人" name="RepairSender">
-        <Input />
-      </Form.Item>
-      <Form.Item label="联系电话" name="Telephone1">
-        <Input />
-      </Form.Item>
-      <Form.Item label="预交车时间" name="IntendingHandTime">
-        <DatePicker style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item label="下次保养里程" name="NextServiceMileage">
-        <Input />
-      </Form.Item>
-
-      <Form.Item label="下次保养日" name="NextServiceDate">
-        <DatePicker style={{ width: "100%" }} />
-      </Form.Item>
-      <Form.Item label="备注" name="Remark">
-        <TextArea />
-      </Form.Item>
-      <Modal
-        title={title}
-        onOk={handok}
-        onCancel={() => setVisible(false)}
-        visible={visible}
-      >
-        <div style={{ height: "400px", overflowY: "scroll" }}>
-          <Tabs defaultActiveKey="1" onChange={() => {}}>
-            <TabPane tab="维修项目历史" key="1">
-              <Table
-                dataSource={dataSource}
-                columns={columns}
-                rowKey={(record) => record.id}
-                scroll={{ x: 400 }}
-                pagination={false}
-                onRow={(record) => {
-                  return {
-                    onClick: (event) => {
-                      props.handelOK(record);
-                    }, // 点击行
-                  };
-                }}
+      <Row>
+        <Col span={12}>
+          <Form.Item label="车牌号">
+            <Form.Item name="VehicleTag" noStyle>
+              <Input
+                addonAfter={
+                  props.newBuild ? (
+                    <>
+                      <img
+                        src={more_icon}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          showModal("crdInfoTable");
+                        }}
+                      />
+                      <img
+                        src={Car_btn}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          showModal("carCard");
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <img
+                      src={Car_btn}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        showModal("carCard");
+                      }}
+                    />
+                  )
+                }
               />
-            </TabPane>
-            <TabPane tab="维修配件历史" key="2">
-              <Table
-                dataSource={dataSource_other}
-                columns={columns_other}
-                rowKey={(record) => record.id}
-                scroll={{ x: 400 }}
-                pagination={false}
-                onRow={(record) => {
-                  return {
-                    onClick: (event) => {
-                      props.handelOK(record);
-                    }, // 点击行
-                  };
-                }}
-              />
-            </TabPane>
-          </Tabs>
-        </div>
-      </Modal>
+            </Form.Item>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="客户名称" name="CarOwnerName">
+            <Input
+              disabled={props.form.getFieldValue("CarOwnerName") ? true : false}
+              addonAfter={
+                props.newBuild ? (
+                  <img
+                    src={Car_btn}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      showModal("customer");
+                    }}
+                  />
+                ) : null
+              }
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="发动机号" name="EngineCode">
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="区域" className="area">
+            <Input.Group compact>
+              <Form.Item name="Province" noStyle>
+                <Select
+                  placeholder="请选择市"
+                  onChange={onChangeProvince}
+                  style={{ width: "90px" }}
+                >
+                  {province.map((ele, index) => {
+                    return (
+                      <Option value={ele.Province} key={ele.ID}>
+                        {ele.Province}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item name="City" noStyle>
+                <Select
+                  placeholder="请选择区"
+                  onChange={onChangeCity}
+                  style={{ width: "90px" }}
+                >
+                  {city.map((ele, index) => {
+                    return (
+                      <Option value={ele.City} key={ele.ID}>
+                        {ele.City}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item name="Area" noStyle>
+                <Select placeholder="请选择镇" style={{ width: "90px" }}>
+                  {area.map((ele, index) => {
+                    return (
+                      <Option value={ele.AreaName} key={ele.ID}>
+                        {ele.AreaName}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Input.Group>
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="品牌" name="CarBrandCode">
+            <Select onChange={onChangeSeries}>
+              {brands.map((ele, index) => {
+                return (
+                  <Option value={ele.CarBrandCode} key={ele.Sort}>
+                    {ele.CarBrandCode}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="客户地址" name="Address">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="车系" name="CarSeriesCode">
+            <Select onChange={onChangeType}>
+              {series.map((ele, index) => {
+                return (
+                  <Option value={ele.CarSeriesCode} key={ele.Sort}>
+                    {ele.CarSeriesCode}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="手机号码" name="Mobile">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="车型" name=" CarTypeCode">
+            <Select>
+              {types.map((ele, index) => {
+                return (
+                  <Option value={ele.CarTypeCode} key={ele.Sort}>
+                    {ele.CarTypeCode}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="送修人" name="RepairSender">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="VIN" name="UnderPan">
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="联系电话" name="Telephone1">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="购车日期" name="BuyDate">
+            <DatePicker style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="预交车时间" name="IntendingHandTime">
+            <DatePicker style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="进站里程" name="RunMileage">
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="下次保养里程" name="NextServiceMileage">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="维修类型" name="RepairTypeName">
+            <Select>
+              {repairtypes.map((ele, index) => {
+                return (
+                  <Option value={ele.RepairTypeName} key={ele.Sort}>
+                    {ele.RepairTypeName}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="下次保养日" name="NextServiceDate">
+            <DatePicker style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="备注" name="Remark">
+            <TextArea />
+          </Form.Item>
+          <Modal
+            title={title}
+            // onOk={handelOK}
+            onCancel={() => setVisible(false)}
+            visible={visible}
+            footer={false}
+          >
+            <div style={{ height: "400px", overflowY: "scroll" }}>
+              {components[modalType]}
+            </div>
+          </Modal>
+        </Col>
+      </Row>
     </div>
   );
 }

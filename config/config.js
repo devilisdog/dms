@@ -56,6 +56,12 @@ export default defineConfig({
               component: "./buildOrder",
             },
             {
+              // name: '新建工单',
+              // icon: 'table',
+              path: "/buildOrder/addBuild",
+              component: "./buildOrder/addBuild",
+            },
+            {
               path: "/orderList",
               name: "在线工单",
               icon: "crown",

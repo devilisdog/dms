@@ -12,6 +12,7 @@ import AddMeal from "./addMeal";
 import AddItem from "./addItem";
 import AddItemMeal from "./addItemMeal";
 import DispatchModal from "./dispatchModal";
+import CrdInfoTable from "./CrdInfoTable";
 
 import "./index.less";
 
@@ -114,7 +115,9 @@ export default function Edit(props) {
   };
 
   useEffect(() => {
-    searchDetail();
+    if (!props.newBuild) {
+      searchDetail();
+    }
   }, []);
 
   const showModal = (type) => {
@@ -206,7 +209,6 @@ export default function Edit(props) {
 
   //添加零件，添加零件套餐之后的数组
   const handelItem = (record) => {
-    console.log(type, "type");
     if (Array.isArray(record)) {
       const arr = [];
       record.map((item, index) => {
@@ -275,7 +277,7 @@ export default function Edit(props) {
       <Form form={form} {...layout}>
         <div className="title_box">
           {titleDom("一.客户车辆信息")}
-          <CrdInfo form={form} {...data} handelOK={setFormValue} />
+          <CrdInfo form={form} {...data} handelOK={setFormValue} {...props} />
         </div>
 
         <div className="title_box">
@@ -328,7 +330,7 @@ export default function Edit(props) {
         </div>
 
         <div className="title_box">
-          {titleDom("温馨提示")}
+          {titleDom("四.温馨提示")}
           <Form.Item label="" style={{ margin: "0" }}>
             <p>
               1.本人同意按贵站工单所列的修理项目修理，愿意支付有关项目需要更关的零件款及维修费。
@@ -342,7 +344,7 @@ export default function Edit(props) {
 
           <p>
             <span style={{ verticalAlign: "-webkit-baseline-middle" }}>
-              4.旧件是否带走：
+              5.旧件是否带走：
             </span>
             <Form.Item
               label=""
@@ -359,7 +361,7 @@ export default function Edit(props) {
 
           <p>
             <span style={{ verticalAlign: "-webkit-baseline-middle" }}>
-              5.是否洗车：
+              6.是否洗车：
             </span>
 
             <Form.Item
@@ -377,7 +379,7 @@ export default function Edit(props) {
         </div>
 
         <div className="title_box">
-          {titleDom("客户签署")}
+          {titleDom("五.客户签署")}
           客户签署：入站：_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           出站：_________&nbsp;&nbsp;&nbsp; 日期：_____年_____月_____日
           <p style={{ marginTop: "12px" }}>
@@ -385,20 +387,40 @@ export default function Edit(props) {
           </p>
         </div>
       </Form>
-      <div
-        style={{
-          display: "flex",
-          alignContent: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ width: "200px" }}>
-          <Button type="primary" style={{ marginRight: "10px" }}>
-            保存工单
-          </Button>
-          <Button>预览工单</Button>
+
+      {props.newBuild ? (
+        <div
+          style={{
+            display: "flex",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button type="primary">保存工单</Button>
         </div>
-      </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "200px" }}>
+            <Button type="primary" style={{ marginRight: "10px" }}>
+              保存工单
+            </Button>
+            <Button
+              onClick={() => {
+                props.history.push(`/searchList/lookPage/${code}`);
+              }}
+            >
+              预览工单
+            </Button>
+          </div>
+        </div>
+      )}
+
       <Modal
         title={title}
         visible={visible}
