@@ -50,7 +50,7 @@ export default defineConfig({
           routes: [
             {
               path: "/",
-              redirect: "/buildOrder",
+              redirect: "/user/login",
             },
             {
               path: "/buildOrder",
