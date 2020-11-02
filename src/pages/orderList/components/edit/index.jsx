@@ -6,7 +6,7 @@ import EditTable from "@/components/EditTable";
 import EditTableMeal from "@/components/EditTableMeal";
 
 import request from "@/utils/request";
-import _ from "lodash";
+import _, { values } from "lodash";
 import AddPorject from "./addPorject";
 import AddMeal from "./addMeal";
 import AddItem from "./addItem";
@@ -295,6 +295,19 @@ export default function Edit(props) {
     });
   };
 
+  //编辑表单
+  const editSumit = () => {
+    form.validateFields().then((values) => {
+      console.log(values, "values");
+      //   request("/v1/order/update", {
+      //     method: "POST",
+      //     data: formData,
+      //   }).then((res) => {
+      //     console.log(res, "res");
+      //   });
+    });
+  };
+
   const componentsObj = {
     addProject: <AddPorject handelOK={handelOK} />,
     addMeal: <AddMeal handelOK={handelOK} />,
@@ -469,7 +482,11 @@ export default function Edit(props) {
           }}
         >
           <div style={{ width: "200px" }}>
-            <Button type="primary" style={{ marginRight: "10px" }}>
+            <Button
+              type="primary"
+              style={{ marginRight: "10px" }}
+              onClick={editSumit}
+            >
               保存工单
             </Button>
             <Button
