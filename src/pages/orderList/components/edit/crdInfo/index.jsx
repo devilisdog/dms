@@ -362,7 +362,7 @@ export default function CrdInfo(props) {
                 <Select
                   placeholder="请选择市"
                   onChange={onChangeProvince}
-                  style={{ width: "90px" }}
+                  style={{ width: "35%" }}
                 >
                   {province.map((ele, index) => {
                     return (
@@ -377,7 +377,7 @@ export default function CrdInfo(props) {
                 <Select
                   placeholder="请选择区"
                   onChange={onChangeCity}
-                  style={{ width: "90px" }}
+                  style={{ width: "35%" }}
                 >
                   {city.map((ele, index) => {
                     return (
@@ -389,7 +389,7 @@ export default function CrdInfo(props) {
                 </Select>
               </Form.Item>
               <Form.Item name="Area" noStyle>
-                <Select placeholder="请选择镇" style={{ width: "90px" }}>
+                <Select placeholder="请选择镇" style={{ width: "30%" }}>
                   {area.map((ele, index) => {
                     return (
                       <Option value={ele.AreaName} key={ele.ID}>

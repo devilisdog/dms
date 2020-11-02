@@ -1,7 +1,7 @@
 export const dev_base_url = "http://localhost:8000";
-export const test_base_url = "http://106.52.154.94/";
-export const uat_base_url = "http://106.52.154.94/";
-export const prod_base_url = "http://106.52.154.94/";
+export const test_base_url = "http://106.52.154.94";
+export const uat_base_url = "http://106.52.154.94";
+export const prod_base_url = "http://106.52.154.94";
 
 const { REACT_APP_ENV } = process.env;
 let base_url;

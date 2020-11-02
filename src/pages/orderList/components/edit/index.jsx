@@ -385,7 +385,11 @@ export default function Edit(props) {
 
         <div className="title_box">
           {titleDom("四.温馨提示")}
-          <Form.Item label="" style={{ margin: "0" }}>
+          <Form.Item
+            label=""
+            style={{ margin: "0" }}
+            className="tooptipFormItem"
+          >
             <p>
               1.本人同意按贵站工单所列的修理项目修理，愿意支付有关项目需要更关的零件款及维修费。
             </p>
