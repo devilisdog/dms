@@ -54,7 +54,7 @@ const request = extend({
   timeout: 300000,
   // errorHandler,
   // 默认错误处理
-  credentials: "include", // 默认请求是否带上cookie
+  // credentials: "include", // 默认请求是否带上cookie
 });
 
 // request拦截器, 改变url 或 options.
@@ -82,7 +82,7 @@ request.interceptors.response.use(async (response) => {
   const data = await response.clone().json();
 
   if (response?.status == 401) {
-    location.href = "/user/login";
+    location.hash = "/user/login";
     localStorage.clear();
     return;
   }
