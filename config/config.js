@@ -3,11 +3,9 @@ import { defineConfig } from "umi";
 import defaultSettings from "./defaultSettings";
 import proxy from "./proxy";
 const { REACT_APP_ENV } = process.env;
-const publicPath = '/dist/';
+
 export default defineConfig({
   hash: true,
-  base: publicPath, //最终输出路径
-  publicPath: publicPath,
   antd: {},
   dva: {
     hmr: true,
@@ -121,8 +119,8 @@ export default defineConfig({
   // @ts-ignore
   title: false,
   ignoreMomentLocale: true,
-  // proxy: proxy[REACT_APP_ENV || "dev"],
+  proxy: proxy[REACT_APP_ENV || "dev"],
   manifest: {
-    basePath: publicPath,
+    basePath: "/",
   },
 });

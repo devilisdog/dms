@@ -1,25 +1,26 @@
-export const dev_base_url = 'http://106.52.154.941/';
-export const test_base_url = 'http://106.52.154.942/';
-export const uat_base_url = 'http://106.52.154.943/';
-export const prod_base_url = 'http://106.52.154.94/';
+export const dev_base_url = "http://localhost:8000";
+export const test_base_url = "http://106.52.154.94/";
+export const uat_base_url = "http://106.52.154.94/";
+export const prod_base_url = "http://106.52.154.94/";
 
+const { REACT_APP_ENV } = process.env;
 let base_url;
 
-switch (process.env.REACT_APP_ENV) {
-  case 'development':
+switch (REACT_APP_ENV) {
+  case "development":
     base_url = dev_base_url;
     break;
-  case 'test':
+  case "test":
     base_url = test_base_url;
     break;
-  case 'uat':
+  case "uat":
     base_url = uat_base_url;
     break;
-  case 'production':
+  case "production":
     base_url = prod_base_url;
     break;
 
-  //本地开发环境连后端test环境
+  //本地开发环境
   default:
     base_url = dev_base_url;
     break;

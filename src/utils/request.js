@@ -4,6 +4,8 @@
  */
 import { extend } from "umi-request";
 import { message, notification } from "antd";
+import base_url from "../../config/proConig";
+
 const codeMessage = {
   200: "服务器成功返回请求的数据。",
   201: "新建或修改数据成功。",
@@ -47,8 +49,9 @@ const errorHandler = (error) => {
 /**
  * 配置request请求时的默认参数
  */
-
 const request = extend({
+  prefix: base_url,
+  timeout: 300000,
   // errorHandler,
   // 默认错误处理
   credentials: "include", // 默认请求是否带上cookie
@@ -56,7 +59,6 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use(async (url, options) => {
-  console.log(url,'url')
   let c_token = localStorage.getItem("token");
   if (c_token) {
     const headers = {
@@ -95,31 +97,4 @@ request.interceptors.response.use(async (response) => {
   return response;
 });
 
-// response拦截器, 处理response
-// request.interceptors.response.use(
-//   (response, options) => {
-//     if (response.status == 401) {
-//       message.error('请重新登录');
-//       localStorage.clear();
-//       window.location.reload();
-//       window.location.replace('/user/login');
-//       return Promise.reject(response.statusText);
-//     }
-
-//     if (response.status !== 200) {
-//       message.error(response.data.msg);
-//       return Promise.reject(response.data.msg);
-//     }
-//     return response;
-//   },
-//   function (error) {
-//     const status = error.response && error.response.status;
-//     if (status == 400) {
-//       message.error(error.response);
-//     } else {
-//       message.error('超时，请稍后再试');
-//     }
-//     return Promise.reject(error);
-//   },
-// );
 export default request;
