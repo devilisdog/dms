@@ -22,7 +22,7 @@ switch (REACT_APP_ENV) {
 
   //本地开发环境
   default:
-    base_url = "http://106.52.154.94";
+    base_url = "http://localhost:8000";
     break;
 }
 

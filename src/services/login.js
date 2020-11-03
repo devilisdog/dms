@@ -1,7 +1,7 @@
-import request from '@/utils/request';
+import request from "@/utils/request";
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
-    method: 'POST',
+  return request("/v1/login", {
+    method: "POST",
     data: params,
   });
 }

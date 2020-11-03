@@ -6,7 +6,7 @@ import EditTable from "@/components/EditTable";
 import EditTableMeal from "@/components/EditTableMeal";
 
 import request from "@/utils/request";
-import _, { values } from "lodash";
+import _ from "lodash";
 import AddPorject from "./addPorject";
 import AddMeal from "./addMeal";
 import AddItem from "./addItem";
@@ -46,6 +46,7 @@ export default function Edit(props) {
   const [form] = Form.useForm();
 
   const code = props?.match?.params?.id;
+  const { newBuild } = props;
 
   const [data, setData] = useState({});
   const [visible, setVisible] = useState(false);
@@ -118,7 +119,7 @@ export default function Edit(props) {
   };
 
   useEffect(() => {
-    if (!props.newBuild) {
+    if (!newBuild) {
       searchDetail();
     }
   }, []);
@@ -327,13 +328,22 @@ export default function Edit(props) {
       </div>
     );
   };
-
+  const userInfo = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="EditPage">
-      <div className="page_title">XXX汽车销售服务有限公司</div>
-      <div>工单号： {TBL_RepairOrder?.TBL_RepairOrder}</div>
-      <div>开单时间： {TBL_RepairOrder?.CreateDate}</div>
-      <div>服务顾问：{TBL_RepairOrder?.EditBy}</div>
+      <div className="page_title">{userInfo?.company}</div>
+      <div
+        style={{ width: "45%", display: "inline-block", marginLeft: "10px" }}
+      >
+        工单号： {TBL_RepairOrder?.TBL_RepairOrder}
+      </div>
+      <div style={{ display: "inline-block" }}>
+        服务顾问：{newBuild ? userInfo?.username : TBL_RepairOrder?.EditBy}
+      </div>
+      <div style={{ marginLeft: "10px" }}>
+        开单时间： {TBL_RepairOrder?.CreateDate}
+      </div>
+
       <Form form={form} {...layout}>
         <div className="title_box">
           {titleDom("一.客户车辆信息")}
@@ -461,7 +471,7 @@ export default function Edit(props) {
         </div>
       </Form>
 
-      {props.newBuild ? (
+      {newBuild ? (
         <div
           style={{
             display: "flex",

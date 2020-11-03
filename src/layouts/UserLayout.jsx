@@ -48,8 +48,8 @@ const UserLayout = (props) => {
       >
         <div
           style={{
-            height: "1024px",
-            width: "1024px",
+            height: "100vh",
+            width: "100vw",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -60,10 +60,10 @@ const UserLayout = (props) => {
         >
           <div
             style={{
-              width: "430px",
-              heightl: "324px",
+              //   width: "430px",
               backgroundColor: "#fff",
             }}
+            className={styles.form_box}
           >
             <div style={{ textAlign: "center", paddingTop: "12px" }}>
               <div style={{ fontSize: "20px", fontWeight: "600" }}>

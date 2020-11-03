@@ -27,6 +27,11 @@ const Login = (props) => {
   const [type, setType] = useState("account");
 
   const handleSubmit = (values) => {
+    // const { dispatch } = props;
+    // dispatch({
+    //   type: "login/login",
+    //   payload: { ...values, type },
+    // });
     const params = {
       ...values,
     };
@@ -34,10 +39,10 @@ const Login = (props) => {
     request("/v1/login", {
       method: "POST",
       data: params,
-      // requestType: "form",
     })
       .then((res) => {
-        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res?.data?.token);
+        localStorage.setItem("user", JSON.stringify(res?.data?.user));
         props.history.push("/buildOrder");
       })
       .catch((error) => {
