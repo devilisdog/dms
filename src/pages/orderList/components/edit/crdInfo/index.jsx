@@ -212,6 +212,7 @@ export default function CrdInfo(props) {
                 ...record,
                 CreateDate: record?.CreateDate,
                 CarOwnerCode: record?.CarOwnerCode,
+                CarOwnerCode_right: record?.CarOwnerCode,
                 ID: record?.ID,
                 BuyDate: record?.BuyDate
                   ? moment(record?.BuyDate, "YYYY-MM-DD")
@@ -524,7 +525,7 @@ export default function CrdInfo(props) {
         <Col span={12}>
           <Form.Item
             label="维修类型"
-            name="RepairTypeName"
+            name="RepairTypeCode"
             rules={[{ required: true, message: "请选择维修类型" }]}
           >
             <Select>

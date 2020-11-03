@@ -106,7 +106,7 @@ export default function Edit(props) {
         ),
         RunMileage: TBL_Vehicleselect?.RunMileage,
         NextServiceMileage: TBL_Vehicleselect?.NextServiceMileage,
-        RepairTypeName: TBL_RepairOrder?.RepairTypeName,
+        RepairTypeCode: TBL_RepairOrder?.RepairTypeCode,
         NextServiceDate: moment(
           TBL_Vehicleselect?.NextServiceDate,
           "YYYY-MM-DD"
@@ -319,7 +319,7 @@ export default function Edit(props) {
         carOwnerInfo: obj,
         postRepairItem: dataSource,
         postPartItem: dataSourceMeal,
-        RepairOrderCode: TBL_RepairOrder?.TBL_RepairOrder,
+        RepairOrderCode: TBL_RepairOrder?.RepairOrderCode,
       };
 
       request("/v1/order/update", {
@@ -329,7 +329,7 @@ export default function Edit(props) {
         .then((res) => {
           message.success("编辑成功！");
           history.push(
-            `/searchList/lookPage/${TBL_RepairOrder?.TBL_RepairOrder}`
+            `/searchList/lookPage/${TBL_RepairOrder?.RepairOrderCode}`
           );
         })
         .catch((err) => {
@@ -364,7 +364,7 @@ export default function Edit(props) {
       <div
         style={{ width: "45%", display: "inline-block", marginLeft: "10px" }}
       >
-        工单号： {TBL_RepairOrder?.TBL_RepairOrder}
+        工单号： {TBL_RepairOrder?.RepairOrderCode}
       </div>
       <div style={{ display: "inline-block" }}>
         服务顾问：{newBuild ? userInfo?.username : TBL_RepairOrder?.EditBy}
