@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Divider, Form, Button, Modal, Radio } from "antd";
+import { Card, Divider, Form, Button, Modal, Radio, message } from "antd";
 import moment from "moment";
 import CrdInfo from "./crdInfo";
 import EditTable from "@/components/EditTable";
@@ -12,7 +12,7 @@ import AddMeal from "./addMeal";
 import AddItem from "./addItem";
 import AddItemMeal from "./addItemMeal";
 import DispatchModal from "./dispatchModal";
-import CrdInfoTable from "./CrdInfoTable";
+import { history } from "umi";
 
 import "./index.less";
 
@@ -115,6 +115,10 @@ export default function Edit(props) {
 
         IsReserveOldPart: TBL_RepairOrder?.IsReserveOldPart,
         IsWash: TBL_RepairOrder?.IsWash,
+
+        CarOwnerCode: TBL_Vehicleselect?.CarOwnerCode,
+        CreateDate: TBL_RepairOrder?.CreateDate,
+        ID: TBL_Vehicleselect?.ID,
       };
 
       form.setFieldsValue(initialValues);
@@ -290,9 +294,9 @@ export default function Edit(props) {
       request("/v1/order/create", {
         method: "POST",
         data: formData,
-        // requestType: "form",
       }).then((res) => {
-        console.log(res, "res");
+        message.success("新建成功！");
+        history.push(`/searchList/lookPage/${res?.data?.RepairOrderCode}`);
       });
     });
   };
@@ -300,13 +304,30 @@ export default function Edit(props) {
   //编辑表单
   const editSumit = () => {
     form.validateFields().then((values) => {
-      console.log(values, "values");
-      //   request("/v1/order/update", {
-      //     method: "POST",
-      //     data: formData,
-      //   }).then((res) => {
-      //     console.log(res, "res");
-      //   });
+      const obj = {
+        ...values,
+        BuyDate: moment(values.BuyDate).format("YYYY-MM-DD"),
+        IntendingHandTime: moment(values.IntendingHandTime).format(
+          "YYYY-MM-DD"
+        ),
+        NextServiceDate: moment(values.NextServiceDate).format("YYYY-MM-DD"),
+      };
+
+      const formData = {
+        carOwnerInfo: obj,
+        postRepairItem: dataSource,
+        postPartItem: dataSourceMeal,
+      };
+
+      request("/v1/order/update", {
+        method: "POST",
+        data: formData,
+      }).then((res) => {
+        message.success("编辑成功！");
+        history.push(
+          `/searchList/lookPage/${TBL_RepairOrder?.TBL_RepairOrder}`
+        );
+      });
     });
   };
 

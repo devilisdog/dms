@@ -153,6 +153,14 @@ export default function CrdInfo(props) {
     setVisible(false);
   };
 
+  const validateRule = (rule, value, callback) => {
+    const num = Number(props.form.getFieldValue("RunMileage"));
+    if (value < num) {
+      callback("不能小于进站里程");
+    }
+    callback();
+  };
+
   const columns = [
     { title: "工单号", dataIndex: "RepairOrderCode" },
     { title: "开单日期", dataIndex: "CeateDate" },
@@ -282,6 +290,7 @@ export default function CrdInfo(props) {
           <Form.Item label="车牌号">
             <Form.Item name="VehicleTag" noStyle>
               <Input
+                disabled={props.newBuild ? false : true}
                 addonAfter={
                   props.newBuild ? (
                     <>
@@ -498,7 +507,15 @@ export default function CrdInfo(props) {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="下次保养里程" name="NextServiceMileage">
+          <Form.Item
+            label="下次保养里程"
+            name="NextServiceMileage"
+            rules={[
+              {
+                validator: validateRule,
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
         </Col>
@@ -545,6 +562,7 @@ export default function CrdInfo(props) {
           </Modal>
         </Col>
       </Row>
+
       <Form.Item
         label=""
         name="CarOwnerCode"
