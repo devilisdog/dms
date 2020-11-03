@@ -523,7 +523,7 @@ export default function Edit(props) {
             </Button>
             <Button
               onClick={() => {
-                props.history.push(`/searchList/lookPage/${code}`);
+                history.push(`/searchList/lookPage/${code}`);
               }}
             >
               预览工单
