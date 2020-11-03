@@ -34,7 +34,7 @@ const errorHandler = (error) => {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
+      message: `请求错误 ${status}`,
       description: errorText,
     });
   } else if (!response) {
@@ -52,7 +52,7 @@ const errorHandler = (error) => {
 const request = extend({
   prefix: base_url,
   timeout: 300000,
-  // errorHandler,
+  //   errorHandler,
   // 默认错误处理
   // credentials: "include", // 默认请求是否带上cookie
 });
@@ -88,7 +88,6 @@ request.interceptors.response.use(async (response) => {
   }
   if (response?.status == 400) {
     message.error(data?.msg);
-    return;
   }
   if (response?.status == 500) {
     message.error("系统错误");

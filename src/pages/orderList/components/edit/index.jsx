@@ -295,8 +295,10 @@ export default function Edit(props) {
         method: "POST",
         data: formData,
       }).then((res) => {
-        message.success("新建成功！");
-        history.push(`/searchList/lookPage/${res?.data?.RepairOrderCode}`);
+        if (res?.data?.RepairOrderCode) {
+          message.success("新建成功！");
+          history.push(`/searchList/lookPage/${res?.data?.RepairOrderCode}`);
+        }
       });
     });
   };
@@ -317,17 +319,22 @@ export default function Edit(props) {
         carOwnerInfo: obj,
         postRepairItem: dataSource,
         postPartItem: dataSourceMeal,
+        RepairOrderCode: TBL_RepairOrder?.TBL_RepairOrder,
       };
 
       request("/v1/order/update", {
         method: "POST",
         data: formData,
-      }).then((res) => {
-        message.success("编辑成功！");
-        history.push(
-          `/searchList/lookPage/${TBL_RepairOrder?.TBL_RepairOrder}`
-        );
-      });
+      })
+        .then((res) => {
+          message.success("编辑成功！");
+          history.push(
+            `/searchList/lookPage/${TBL_RepairOrder?.TBL_RepairOrder}`
+          );
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
     });
   };
 
