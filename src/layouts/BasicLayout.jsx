@@ -11,7 +11,13 @@ import { Result, Button } from "antd";
 import Authorized from "@/utils/Authorized";
 import RightContent from "@/components/GlobalHeader/RightContent";
 import { getMatchMenu } from "@umijs/route-utils";
-import logo from "../assets/logo.svg";
+
+import logo from "../assets/img/main_logo.jpg";
+
+import create from "../assets/img/create.png";
+import all_list from "../assets/img/all_list.png";
+import complete from "../assets/img/complete.png";
+
 const noMatch = (
   <Result
     status={403}
@@ -28,10 +34,54 @@ const noMatch = (
 /**
  * use Authorized check all menu item
  */
+
+const iconObj = {
+  smile: (
+    <img
+      src={create}
+      style={{
+        width: "20px",
+        height: "20px",
+        display: "inline-block",
+        marginRight: "12px",
+      }}
+    />
+  ),
+  crown: (
+    <img
+      src={all_list}
+      style={{
+        width: "20px",
+        height: "20px",
+        display: "inline-block",
+        marginRight: "12px",
+      }}
+    />
+  ),
+  table: (
+    <img
+      src={complete}
+      style={{
+        width: "20px",
+        height: "20px",
+        display: "inline-block",
+        marginRight: "12px",
+      }}
+    />
+  ),
+};
 const menuDataRender = (menuList) =>
-  menuList.map((item) => {
+  menuList.map((item, index) => {
     const localItem = {
       ...item,
+      icon:
+        index === 1
+          ? iconObj["smile"]
+          : index === 3
+          ? iconObj["crown"]
+          : index === 5
+          ? iconObj["table"]
+          : null,
       children: item.children ? menuDataRender(item.children) : undefined,
     };
     return Authorized.check(item.authority, localItem, null);
@@ -106,7 +156,7 @@ const BasicLayout = (props) => {
       logo={logo}
       formatMessage={formatMessage}
       onCollapse={handleMenuCollapse}
-      onMenuHeaderClick={() => history.push("/")}
+      onMenuHeaderClick={() => history.push("/buildOrder")}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
@@ -116,7 +166,7 @@ const BasicLayout = (props) => {
       }}
       breadcrumbRender={(routers = []) => [
         {
-          path: "/",
+          path: "/buildOrder",
           breadcrumbName: formatMessage({
             id: "menu.home",
           }),
@@ -126,7 +176,7 @@ const BasicLayout = (props) => {
       itemRender={(route, params, routes, paths) => {
         const first = routes.indexOf(route) === 0;
         return first ? (
-          <Link to={paths.join("/")}>{route.breadcrumbName}</Link>
+          <Link to={paths.join("/buildOrder")}>{route.breadcrumbName}</Link>
         ) : (
           <span>{route.breadcrumbName}</span>
         );

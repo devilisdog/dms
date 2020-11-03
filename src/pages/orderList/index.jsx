@@ -93,8 +93,8 @@ export default function OrderList(props) {
   );
 
   const initialValues = {
-    time: "请选择",
-    search_type: "请选择",
+    time: "",
+    search_type: "",
   };
 
   return (

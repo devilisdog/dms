@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Divider, message, Table } from "antd";
 import request from "@/utils/request";
 
-// import "./index.less";
+import { Helmet } from "react-helmet";
+
+import "./index.less";
 
 export default function LookPage(props) {
   const code = props?.match?.params?.id;
@@ -86,13 +88,26 @@ export default function LookPage(props) {
       <div
         className="LookPage"
         id="print_area"
-        style={{ backgroundColor: "#ffffff", padding: "20px 0" }}
+        style={{
+          backgroundColor: "#ffffff",
+          padding: "10px",
+          minWidth: "1000px",
+        }}
       >
+        <Helmet
+          onChangeClientState={(newState, addedTags, removedTags) =>
+            console.log(newState, addedTags, removedTags)
+          }
+        >
+          <meta
+            name="viewport"
+            content="width=device-width,intial-scale=0,maximum-scale=0,user-scalable=yes,shrink-to-fit=no"
+          />
+        </Helmet>
         <div
           className="pageTitle"
           style={{
             textAlign: "center",
-            marginBottom: "20px",
             fontSize: "16px",
             fontWeight: "500",
           }}

@@ -8,6 +8,7 @@ import React from "react";
 import { history, connect } from "umi";
 import HeaderDropdown from "../HeaderDropdown";
 import styles from "./index.less";
+import portrait from "../../assets/img/portrait.png";
 
 class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {
@@ -21,6 +22,8 @@ class AvatarDropdown extends React.Component {
           type: "login/logout",
         });
       }
+
+      localStorage.clear();
 
       return;
     }
@@ -71,7 +74,7 @@ class AvatarDropdown extends React.Component {
           <Avatar
             size="small"
             className={styles.avatar}
-            src={currentUser.avatar}
+            src={portrait}
             alt="avatar"
           />
           <span className={`${styles.name} anticon`}>{userInfo.username}</span>

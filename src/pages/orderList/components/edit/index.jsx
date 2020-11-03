@@ -58,8 +58,11 @@ export default function Edit(props) {
 
   const [row, setRow] = useState([]);
 
-  const [leftForm, setleftForm] = useState({});
-  const [rightForm, setrightForm] = useState({});
+  //维修错是套餐选中
+  const [addMealList, setaddMealList] = useState([]);
+
+  //更换零件套餐选中
+  const [addItemMealList, setaddItemMealList] = useState([]);
 
   const searchDetail = () => {
     const params = {
@@ -164,6 +167,11 @@ export default function Edit(props) {
     setVisible(false);
   };
 
+  //得到维修措施套餐中的list
+  const getmealList = (list) => {
+    setaddMealList(list);
+  };
+
   //删除之后的数组
   const getlist = (list) => {
     setDataSource(list);
@@ -176,7 +184,6 @@ export default function Edit(props) {
 
   //派工后修改数组
   const getPerson = (personRecord) => {
-    console.log(personRecord, "personRecord");
     const newData = _.cloneDeep(dataSource);
 
     dataSource.map((ele, index) => {
@@ -248,6 +255,11 @@ export default function Edit(props) {
     setVisible(false);
   };
 
+  //得到维修措施套餐中的list
+  const getItemMealList = (list) => {
+    setaddItemMealList(list);
+  };
+
   //删除之后的数组
   const get_Op_list = (list) => {
     setDataSourceMeal(list);
@@ -255,17 +267,6 @@ export default function Edit(props) {
 
   const getKeyArr = (data) => {
     setKeyArr(list);
-  };
-
-  //表格填充
-  const setFormValue = () => {};
-
-  const getleftForm = (data) => {
-    setleftForm(data);
-  };
-
-  const getrightForm = (data) => {
-    setrightForm(data);
   };
 
   //新建表单
@@ -311,11 +312,11 @@ export default function Edit(props) {
 
   const componentsObj = {
     addProject: <AddPorject handelOK={handelOK} />,
-    addMeal: <AddMeal handelOK={handelOK} />,
+    addMeal: <AddMeal getmealList={getmealList} />,
     dispatch: <DispatchModal handelOK={getPerson} />,
 
     addItem: <AddItem handelOK={handelItem} />,
-    addItemMeal: <AddItemMeal handelOK={handelItem} />,
+    addItemMeal: <AddItemMeal getItemMealList={getItemMealList} />,
   };
 
   const { TBL_RepairOrder } = data;
@@ -347,14 +348,7 @@ export default function Edit(props) {
       <Form form={form} {...layout}>
         <div className="title_box">
           {titleDom("一.客户车辆信息")}
-          <CrdInfo
-            form={form}
-            {...data}
-            handelOK={setFormValue}
-            {...props}
-            getleftForm={getleftForm}
-            getrightForm={getrightForm}
-          />
+          <CrdInfo form={form} {...data} {...props} />
         </div>
 
         <div className="title_box">
@@ -515,7 +509,31 @@ export default function Edit(props) {
         visible={visible}
         onCancel={() => setVisible(false)}
         // onOk={handelOK}
-        footer={false}
+        footer={
+          type == "addMeal" ? (
+            <Button
+              type="primary"
+              onClick={() => {
+                handelOK(addMealList);
+              }}
+              disabled={addMealList.length > 0 ? false : true}
+            >
+              确定
+            </Button>
+          ) : type == "addItemMeal" ? (
+            <Button
+              type="primary"
+              onClick={() => {
+                handelItem(addItemMealList);
+              }}
+              disabled={addItemMealList.length > 0 ? false : true}
+            >
+              确定
+            </Button>
+          ) : (
+            false
+          )
+        }
       >
         {componentsObj[type]}
       </Modal>

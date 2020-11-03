@@ -52,19 +52,35 @@ export default function AddItemMeal(props) {
     setVisible(false);
   };
 
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      props.getItemMealList(selectedRows[0]?.list);
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User",
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
   return (
     <div>
       <Table
+        rowSelection={{
+          type: "radio",
+          ...rowSelection,
+        }}
         columns={colums}
         dataSource={dataSource}
         pagination={false}
-        onRow={(record) => {
-          return {
-            onClick: (event) => {
-              props.handelOK(record.list);
-            }, // 点击行
-          };
-        }}
+        rowKey={(record) => record.RepairMenuCode}
+        // onRow={(record) => {
+        //   return {
+        //     onClick: (event) => {
+        //       props.handelOK(record.list);
+        //     }, // 点击行
+        //   };
+        // }}
       />
 
       <Modal
