@@ -453,7 +453,7 @@ export default function Edit(props) {
             <p>4.如有涉及保修事项按《保修及保养手册》执行。</p>
           </Form.Item>
 
-          <p>
+          <div>
             <span style={{ verticalAlign: "-webkit-baseline-middle" }}>
               5.旧件是否带走：
             </span>
@@ -469,9 +469,9 @@ export default function Edit(props) {
                 <Radio value={"否"}>否</Radio>
               </Radio.Group>
             </Form.Item>
-          </p>
+          </div>
 
-          <p>
+          <div>
             <span style={{ verticalAlign: "-webkit-baseline-middle" }}>
               6.是否洗车：
             </span>
@@ -488,7 +488,7 @@ export default function Edit(props) {
                 <Radio value={"否"}>否</Radio>
               </Radio.Group>
             </Form.Item>
-          </p>
+          </div>
         </div>
 
         <div className="title_box">

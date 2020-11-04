@@ -238,7 +238,7 @@ export default function LookPage(props) {
             className="card_info_two_sub"
             style={{ width: "25%", display: "inline-block" }}
           >
-            <p>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -246,8 +246,8 @@ export default function LookPage(props) {
                 1.预估工时费
               </span>
               <span className="value"> {TBL_RepairOrder?.ManHourExpense}</span>
-            </p>
-            <p>
+            </div>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -255,14 +255,14 @@ export default function LookPage(props) {
                 2.预估配件费
               </span>
               <span className="value">{TBL_RepairOrder?.PartExpense}</span>
-            </p>
+            </div>
           </div>
 
           <div
             className="card_info_two_sub"
             style={{ width: "25%", display: "inline-block" }}
           >
-            <p>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -270,8 +270,8 @@ export default function LookPage(props) {
                 3.预估其他费
               </span>
               <span className="value">0</span>
-            </p>
-            <p>
+            </div>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -279,14 +279,14 @@ export default function LookPage(props) {
                 4.预估销售金额
               </span>
               <span className="value">0</span>
-            </p>
+            </div>
           </div>
 
           <div
             className="card_info_two_sub"
             style={{ width: "25%", display: "inline-block" }}
           >
-            <p>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -294,8 +294,8 @@ export default function LookPage(props) {
                 5.工时折扣
               </span>
               <span className="value">0</span>
-            </p>
-            <p>
+            </div>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -303,14 +303,14 @@ export default function LookPage(props) {
                 6.材料折扣
               </span>
               <span className="value">0</span>
-            </p>
+            </div>
           </div>
 
           <div
             className="card_info_two_sub"
             style={{ width: "25%", display: "inline-block" }}
           >
-            <p>
+            <div>
               <span
                 className="label"
                 style={{ width: "120px", display: "inline-block" }}
@@ -318,7 +318,7 @@ export default function LookPage(props) {
                 7.销售折扣
               </span>
               <span className="value">0</span>
-            </p>
+            </div>
           </div>
         </div>
         <Divider style={{ borderTop: "1px solid", margin: "12px 0" }} />
@@ -366,13 +366,13 @@ export default function LookPage(props) {
         <Divider style={{ borderTop: "1px solid", margin: "12px 0" }} />
 
         <div style={{ paddingLeft: "24px" }}>
-          <p>
+          <div>
             客户签署：入站：_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             出站：_________&nbsp;&nbsp;&nbsp; 日期：_____年_____月_____日
-            <p style={{ marginTop: "12px" }}>
+            <div style={{ marginTop: "12px" }}>
               投诉:{Corporation?.Telephone2}地址:{Corporation?.Address}
-            </p>
-          </p>
+            </div>
+          </div>
         </div>
       </div>
       <div

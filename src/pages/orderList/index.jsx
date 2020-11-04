@@ -152,6 +152,7 @@ export default function OrderList(props) {
       <Table
         columns={columns}
         dataSource={dataSource}
+        rowKey={(record) => record.temprownumber}
         pagination={{
           showSizeChanger: false,
           onChange: onChangePage,
