@@ -108,6 +108,7 @@ export default function Edit(props) {
           ? moment(TBL_RepairOrder?.IntendingHandTime, "YYYY-MM-DD")
           : "",
         RunMileage: TBL_Vehicleselect?.RunMileage,
+        RunMileage_sub: TBL_Vehicleselect?.RunMileage,
         NextServiceMileage: TBL_Vehicleselect?.NextServiceMileage,
         RepairTypeCode: TBL_RepairOrder?.RepairTypeCode,
         NextServiceDate: TBL_Vehicleselect?.NextServiceDate

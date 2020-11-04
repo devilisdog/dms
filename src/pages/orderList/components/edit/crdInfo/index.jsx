@@ -228,6 +228,7 @@ export default function CrdInfo(props) {
 
                 props.form.setFieldsValue({
                   ...record,
+                  RunMileage_sub: record?.RunMileage,
                   CreateDate: record?.CreateDate,
                   CarOwnerCode: record?.CarOwnerCode,
                   CarOwnerCode_right: record?.CarOwnerCode,
@@ -546,6 +547,13 @@ export default function CrdInfo(props) {
           </Form.Item>
         </Col>
         <Col span={12}>
+          <Form.Item label="上次里程" name="RunMileage_sub">
+            <Input disabled={true} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
           <Form.Item
             label="下次保养里程"
             name="NextServiceMileage"
@@ -558,8 +566,6 @@ export default function CrdInfo(props) {
             <Input />
           </Form.Item>
         </Col>
-      </Row>
-      <Row>
         <Col span={12}>
           <Form.Item
             label="维修类型"
@@ -577,31 +583,32 @@ export default function CrdInfo(props) {
             </Select>
           </Form.Item>
         </Col>
+      </Row>
+      <Row>
         <Col span={12}>
           <Form.Item label="下次保养日" name="NextServiceDate">
             <DatePicker style={{ width: "100%" }} />
           </Form.Item>
         </Col>
-      </Row>
-      <Row>
         <Col span={12}>
           <Form.Item label="备注" name="Remark">
             <TextArea />
           </Form.Item>
-          <Modal
-            title={title}
-            // onOk={handelOK}
-            onCancel={() => setVisible(false)}
-            visible={visible}
-            footer={false}
-            width={"80%"}
-          >
-            <div style={{ height: "400px", overflowY: "scroll" }}>
-              {components[modalType]}
-            </div>
-          </Modal>
         </Col>
       </Row>
+
+      <Modal
+        title={title}
+        // onOk={handelOK}
+        onCancel={() => setVisible(false)}
+        visible={visible}
+        footer={false}
+        width={"80%"}
+      >
+        <div style={{ height: "400px", overflowY: "scroll" }}>
+          {components[modalType]}
+        </div>
+      </Modal>
 
       <Form.Item
         label=""
