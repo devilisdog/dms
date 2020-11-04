@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, Divider, message, Table } from "antd";
 import request from "@/utils/request";
 
@@ -38,6 +38,29 @@ export default function LookPage(props) {
     window.location.reload();
   };
 
+  //监控屏幕尺寸
+  //   const useWinSize = () => {
+  //     const [size, setSize] = useState({
+  //       width: document.documentElement.clientWidth,
+  //       height: document.documentElement.clientHeight,
+  //     });
+
+  //     const onResize = useCallback(() => {
+  //       setSize({
+  //         width: document.documentElement.clientWidth,
+  //         height: document.documentElement.clientHeight,
+  //       });
+  //     }, []);
+  //     useEffect(() => {
+  //       window.addEventListener("resize", onResize);
+  //       return () => {
+  //         window.removeEventListener("resize", onResize);
+  //       };
+  //     }, [onResize]);
+
+  //     return size;
+  //   };
+
   const {
     person = {},
     TBL_RepairOrder = {},
@@ -51,16 +74,22 @@ export default function LookPage(props) {
   const card_info = [
     { label: "车牌号", value: TBL_RepairOrder?.VehicleTag },
     { label: "发动机号", value: TBL_Vehicleselect?.EngineCode },
-    { label: "开单时间", value: TBL_RepairOrder?.CreateDate },
+    { label: "开单时间", value: TBL_RepairOrder?.CreateDate?.substring(0, 10) },
     { label: "车型", value: TBL_RepairOrder?.CarTypeCode },
     { label: "VIN", value: TBL_Vehicleselect?.UnderPan },
-    { label: "预交车时间", value: TBL_RepairOrder?.IntendingHandTime },
-    { label: "购车日期", value: TBL_Vehicleselect?.BuyDate },
+    {
+      label: "预交车时间",
+      value: TBL_RepairOrder?.IntendingHandTime?.substring(0, 10),
+    },
+    { label: "购车日期", value: TBL_Vehicleselect?.BuyDate?.substring(0, 10) },
     { label: "进站历程", value: TBL_Vehicleselect?.RunMileage },
     { label: "维修类型", value: TBL_RepairOrder?.RepairTypeName },
     { label: "客户名称", value: TBL_VehicleOwner?.CarOwnerName },
     { label: "下次保养里程", value: TBL_Vehicleselect?.NextServiceMileage },
-    { label: "下次保养日", value: TBL_Vehicleselect?.NextServiceDate },
+    {
+      label: "下次保养日",
+      value: TBL_Vehicleselect?.NextServiceDate?.substring(0, 10),
+    },
     { label: "手机号码", value: TBL_VehicleOwner?.Mobile },
     { label: "联系电话", value: TBL_VehicleOwner?.Telephone1 },
     { label: "送修人", value: TBL_RepairOrder?.RepairSender },
@@ -91,7 +120,7 @@ export default function LookPage(props) {
         style={{
           backgroundColor: "#ffffff",
           padding: "10px",
-          minWidth: "1000px",
+          overflowX: "scroll",
         }}
       >
         <Helmet
@@ -101,7 +130,7 @@ export default function LookPage(props) {
         >
           <meta
             name="viewport"
-            content="width=device-width,intial-scale=0,maximum-scale=0,user-scalable=yes,shrink-to-fit=no"
+            content="width=device-width,intial-scale=0,maximum-scale=0.6,user-scalable=yes,shrink-to-fit=no"
           />
         </Helmet>
         <div
@@ -140,20 +169,37 @@ export default function LookPage(props) {
                 width: "33%",
                 display: "inline-block",
                 padding: "0 24px",
+                whiteSpace: "nowrap",
               }}
             >
-              <div className="card_info_sub" style={{ marginBottom: "5px" }}>
+              <div
+                className="card_info_sub"
+                style={{
+                  marginBottom: "5px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                }}
+              >
                 <span
                   className="label"
                   style={{
-                    display: "inline-block",
-                    width: "90px",
+                    textAlign: "left",
+                    width: `${index == 10 ? "90px" : "70px"}`,
                   }}
                 >
                   {item.label}
                 </span>
 
-                <span className="value" style={{ display: "inline-block" }}>
+                <span
+                  className="value"
+                  style={{
+                    width: "180px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    verticalAlign: "bottom",
+                  }}
+                >
                   {item.value}
                 </span>
               </div>
@@ -223,7 +269,7 @@ export default function LookPage(props) {
               >
                 3.预估其他费
               </span>
-              <span className="value">111</span>
+              <span className="value">0</span>
             </p>
             <p>
               <span
@@ -232,7 +278,7 @@ export default function LookPage(props) {
               >
                 4.预估销售金额
               </span>
-              <span className="value">111</span>
+              <span className="value">0</span>
             </p>
           </div>
 
@@ -247,7 +293,7 @@ export default function LookPage(props) {
               >
                 5.工时折扣
               </span>
-              <span className="value">111</span>
+              <span className="value">0</span>
             </p>
             <p>
               <span
@@ -256,7 +302,7 @@ export default function LookPage(props) {
               >
                 6.材料折扣
               </span>
-              <span className="value">111</span>
+              <span className="value">0</span>
             </p>
           </div>
 
@@ -271,7 +317,7 @@ export default function LookPage(props) {
               >
                 7.销售折扣
               </span>
-              <span className="value">111</span>
+              <span className="value">0</span>
             </p>
           </div>
         </div>

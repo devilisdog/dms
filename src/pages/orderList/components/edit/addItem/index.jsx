@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "antd";
+import { Table, Modal, Form, Input, Button } from "antd";
+
 import request from "@/utils/request";
 
 const colums = [
@@ -18,19 +19,40 @@ const colums = [
 ];
 
 export default function AddItem(props) {
+  const [form] = Form.useForm();
+
   const [dataSource, setDataSource] = useState([]);
 
-  useEffect(() => {
+  const search = () => {
     const params = {
-      manHourItemCode: "",
+      carType: form.getFieldValue("carType"),
+      partCode: form.getFieldValue("partCode"),
     };
-    request.get("/v1/car/parts", params).then((res) => {
+    request.get("/v1/car/parts", { params }).then((res) => {
       setDataSource(res?.data);
     });
+  };
+
+  useEffect(() => {
+    search();
   }, []);
 
   return (
     <div style={{ height: "400px", overflow: "scroll" }}>
+      <div style={{ display: "flex", lineHeight: "32px" }}>
+        <Form form={form}>
+          <Form.Item name="carType" noStyle>
+            <Input style={{ width: "100px" }} placeholder="适配车型" />
+          </Form.Item>
+          <Form.Item name="partCode" noStyle>
+            <Input style={{ width: "100px" }} placeholder="配件名称或代码" />
+          </Form.Item>
+        </Form>
+
+        <Button onClick={search} type={"primary"} style={{ marginLeft: "5px" }}>
+          查询
+        </Button>
+      </div>
       <Table
         columns={colums}
         dataSource={dataSource}

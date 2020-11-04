@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Divider, Form, Button, Modal, Radio, message } from "antd";
+import { Helmet } from "react-helmet";
+
 import moment from "moment";
 import CrdInfo from "./crdInfo";
 import EditTable from "@/components/EditTable";
@@ -99,18 +101,18 @@ export default function Edit(props) {
         RepairSender: TBL_RepairOrder?.RepairSender,
         UnderPan: TBL_Vehicleselect?.UnderPan,
         Telephone1: TBL_VehicleOwner?.Telephone1,
-        BuyDate: moment(TBL_Vehicleselect?.BuyDate, "YYYY-MM-DD"),
-        IntendingHandTime: moment(
-          TBL_RepairOrder?.IntendingHandTime,
-          "YYYY-MM-DD"
-        ),
+        BuyDate: TBL_Vehicleselect?.BuyDate
+          ? moment(TBL_Vehicleselect?.BuyDate, "YYYY-MM-DD")
+          : "",
+        IntendingHandTime: TBL_RepairOrder?.IntendingHandTime
+          ? moment(TBL_RepairOrder?.IntendingHandTime, "YYYY-MM-DD")
+          : "",
         RunMileage: TBL_Vehicleselect?.RunMileage,
         NextServiceMileage: TBL_Vehicleselect?.NextServiceMileage,
         RepairTypeCode: TBL_RepairOrder?.RepairTypeCode,
-        NextServiceDate: moment(
-          TBL_Vehicleselect?.NextServiceDate,
-          "YYYY-MM-DD"
-        ),
+        NextServiceDate: TBL_Vehicleselect?.NextServiceDate
+          ? moment(TBL_Vehicleselect?.NextServiceDate, "YYYY-MM-DD")
+          : "",
         Remark: TBL_RepairOrder?.Remark,
 
         IsReserveOldPart: TBL_RepairOrder?.IsReserveOldPart,
@@ -360,6 +362,16 @@ export default function Edit(props) {
   const userInfo = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="EditPage">
+      <Helmet
+        onChangeClientState={(newState, addedTags, removedTags) =>
+          console.log(newState, addedTags, removedTags)
+        }
+      >
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+        />
+      </Helmet>
       <div className="page_title">{userInfo?.company}</div>
       <div
         style={{ width: "45%", display: "inline-block", marginLeft: "10px" }}

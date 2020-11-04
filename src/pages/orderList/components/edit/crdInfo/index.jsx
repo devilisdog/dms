@@ -10,12 +10,15 @@ import {
   Modal,
   Table,
   Tabs,
+  Button,
+  message,
 } from "antd";
 import request from "@/utils/request";
 import Car_btn from "@/assets/img/car_btn.png";
 import more_icon from "@/assets/img/more_icon.png";
 
 import moment from "moment";
+import { values } from "lodash";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -101,17 +104,31 @@ export default function CrdInfo(props) {
     });
   };
 
+  //车辆信息modal查询
+  const search_crdInfoTable = () => {
+    const params = {
+      vehicleTag: props.form.getFieldValue("vehicleTag"),
+    };
+    request.get("/v1/vehicle/list", { params }).then((res) => {
+      setCarList(res?.data);
+    });
+  };
+
+  //客户信息modal查询
+  const search_customerTable = () => {
+    const params = {
+      carOwnerCode: props.form.getFieldValue("carOwnerCode"),
+    };
+    request.get("/v1/company/customer", { params }).then((res) => {
+      setCcustomerList(res?.data);
+    });
+  };
+
   const showModal = (type) => {
     setModalType(type);
 
     if (type == "crdInfoTable") {
-      const params = {
-        vehicleTag: "",
-      };
-      request.get("/v1/vehicle/list", { params }).then((res) => {
-        setCarList(res?.data);
-      });
-
+      search_crdInfoTable();
       setTitle("选择车辆信息");
     }
 
@@ -129,13 +146,7 @@ export default function CrdInfo(props) {
     }
 
     if (type == "customer") {
-      const params = {
-        carOwnerCode: "",
-      };
-      request.get("/v1/company/customer", { params }).then((res) => {
-        setCcustomerList(res?.data);
-      });
-
+      search_customerTable();
       setTitle("选择客户");
     }
 
@@ -143,13 +154,6 @@ export default function CrdInfo(props) {
   };
 
   const handelOK = (record) => {
-    // if (modalType == "crdInfoTable") {
-    //   getleftForm(record);
-    // }
-    // if (modalType == "customer") {
-    //   getrightForm(record);
-    // }
-
     setVisible(false);
   };
 
@@ -196,38 +200,53 @@ export default function CrdInfo(props) {
 
   const components = {
     crdInfoTable: (
-      <Table
-        columns={columns_crdinfo}
-        dataSource={carList}
-        pagination={false}
-        scroll={{ x: 400 }}
-        onRow={(record) => {
-          return {
-            onClick: (event) => {
-              handelOK(record);
+      <>
+        <div style={{ display: "flex", lineHeight: "32px" }}>
+          <span>车牌/车架号:</span>
+          <Form.Item name="vehicleTag" noStyle>
+            <Input style={{ width: "100px" }} />
+          </Form.Item>
+          <Button
+            onClick={search_crdInfoTable}
+            type={"primary"}
+            style={{ marginLeft: "5px" }}
+          >
+            查询
+          </Button>
+        </div>
+        <Table
+          columns={columns_crdinfo}
+          dataSource={carList}
+          pagination={false}
+          scroll={{ x: 700 }}
+          onRow={(record) => {
+            return {
+              onClick: (event) => {
+                handelOK(record);
 
-              props.form.resetFields();
+                props.form.resetFields();
 
-              props.form.setFieldsValue({
-                ...record,
-                CreateDate: record?.CreateDate,
-                CarOwnerCode: record?.CarOwnerCode,
-                CarOwnerCode_right: record?.CarOwnerCode,
-                ID: record?.ID,
-                BuyDate: record?.BuyDate
-                  ? moment(record?.BuyDate, "YYYY-MM-DD")
-                  : "",
-                IntendingHandTime: record?.IntendingHandTime
-                  ? moment(record?.IntendingHandTime, "YYYY-MM-DD")
-                  : "",
-                NextServiceDate: record?.NextServiceDate
-                  ? moment(record?.NextServiceDate, "YYYY-MM-DD")
-                  : "",
-              });
-            }, // 点击行
-          };
-        }}
-      />
+                props.form.setFieldsValue({
+                  ...record,
+                  CreateDate: record?.CreateDate,
+                  CarOwnerCode: record?.CarOwnerCode,
+                  CarOwnerCode_right: record?.CarOwnerCode,
+                  ID: record?.ID,
+                  BuyDate: record?.BuyDate
+                    ? moment(record?.BuyDate, "YYYY-MM-DD")
+                    : "",
+                  IntendingHandTime: record?.IntendingHandTime
+                    ? moment(record?.IntendingHandTime, "YYYY-MM-DD")
+                    : "",
+                  NextServiceDate: record?.NextServiceDate
+                    ? moment(record?.NextServiceDate, "YYYY-MM-DD")
+                    : "",
+                });
+              }, // 点击行
+            };
+          }}
+        />
+      </>
     ),
     carCard: (
       <Tabs defaultActiveKey="1" onChange={() => {}}>
@@ -252,35 +271,50 @@ export default function CrdInfo(props) {
       </Tabs>
     ),
     customer: (
-      <Table
-        columns={columns_customer}
-        dataSource={ccustomerList}
-        pagination={false}
-        scroll={{ x: 400 }}
-        onRow={(record) => {
-          return {
-            onClick: (event) => {
-              handelOK(record);
-              props.form.resetFields();
+      <>
+        <div style={{ display: "flex", lineHeight: "32px" }}>
+          <span>客户姓名:</span>
+          <Form.Item name="carOwnerCode" noStyle>
+            <Input style={{ width: "100px" }} />
+          </Form.Item>
+          <Button
+            onClick={search_customerTable}
+            type={"primary"}
+            style={{ marginLeft: "5px" }}
+          >
+            查询
+          </Button>
+        </div>
+        <Table
+          columns={columns_customer}
+          dataSource={ccustomerList}
+          pagination={false}
+          scroll={{ x: 400 }}
+          onRow={(record) => {
+            return {
+              onClick: (event) => {
+                handelOK(record);
+                props.form.resetFields();
 
-              props.form.setFieldsValue({
-                ...record,
-                CarOwnerCode_right: record?.CarOwnerCode,
-                CreateDate: record?.CreateDate,
-                BuyDate: record?.BuyDate
-                  ? moment(record?.BuyDate, "YYYY-MM-DD")
-                  : "",
-                IntendingHandTime: record?.IntendingHandTime
-                  ? moment(record?.IntendingHandTime, "YYYY-MM-DD")
-                  : "",
-                NextServiceDate: record?.NextServiceDate
-                  ? moment(record?.NextServiceDate, "YYYY-MM-DD")
-                  : "",
-              });
-            }, // 点击行
-          };
-        }}
-      />
+                props.form.setFieldsValue({
+                  ...record,
+                  CarOwnerCode_right: record?.CarOwnerCode,
+                  CreateDate: record?.CreateDate,
+                  BuyDate: record?.BuyDate
+                    ? moment(record?.BuyDate, "YYYY-MM-DD")
+                    : "",
+                  IntendingHandTime: record?.IntendingHandTime
+                    ? moment(record?.IntendingHandTime, "YYYY-MM-DD")
+                    : "",
+                  NextServiceDate: record?.NextServiceDate
+                    ? moment(record?.NextServiceDate, "YYYY-MM-DD")
+                    : "",
+                });
+              }, // 点击行
+            };
+          }}
+        />
+      </>
     ),
   };
 
@@ -339,7 +373,11 @@ export default function CrdInfo(props) {
         <Col span={12}>
           <Form.Item label="客户名称" name="CarOwnerName">
             <Input
-              disabled={props.form.getFieldValue("CarOwnerName") ? true : false}
+              disabled={
+                props.form.getFieldValue("CarOwnerName") || !props.newBuild
+                  ? true
+                  : false
+              }
               addonAfter={
                 props.newBuild && !props.form.getFieldValue("CarOwnerName") ? (
                   <img
@@ -556,6 +594,7 @@ export default function CrdInfo(props) {
             onCancel={() => setVisible(false)}
             visible={visible}
             footer={false}
+            width={"80%"}
           >
             <div style={{ height: "400px", overflowY: "scroll" }}>
               {components[modalType]}

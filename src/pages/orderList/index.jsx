@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Table, Form, Select, Input } from "antd";
 import request from "@/utils/request";
 import { SearchOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet";
 const { Option } = Select;
 
 export default function OrderList(props) {
@@ -9,6 +10,9 @@ export default function OrderList(props) {
   const [form] = Form.useForm();
 
   const [dataSource, setDataSource] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const search = (page = 1, pageSize = 10, formdata = {}) => {
     const params = {
@@ -18,12 +22,21 @@ export default function OrderList(props) {
     };
     request.get("/v1/order/list", { params }).then((res) => {
       setDataSource(res?.data);
+      setTotal(res?.attributes?.count);
     });
   };
 
   useEffect(() => {
     search(1, 10);
   }, []);
+
+  const onChangePage = (page) => {
+    setPage(page, 10);
+
+    form.validateFields().then((values) => {
+      search(page, 10, values);
+    });
+  };
 
   const columns = [
     {
@@ -74,6 +87,7 @@ export default function OrderList(props) {
   ];
 
   const searchTable = () => {
+    setPage(1);
     form.validateFields().then((values) => {
       search(1, 10, values);
     });
@@ -99,6 +113,16 @@ export default function OrderList(props) {
 
   return (
     <div>
+      <Helmet
+        onChangeClientState={(newState, addedTags, removedTags) =>
+          console.log(newState, addedTags, removedTags)
+        }
+      >
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+        />
+      </Helmet>
       {lookData ? (
         <Form form={form} initialValues={initialValues}>
           <Form.Item
@@ -129,7 +153,17 @@ export default function OrderList(props) {
         </Form>
       ) : null}
 
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          showSizeChanger: false,
+          onChange: onChangePage,
+          pageSize: 10,
+          current: page,
+          total: total,
+        }}
+      />
     </div>
   );
 }

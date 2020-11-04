@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Table, Modal } from "antd";
+import { Table, Modal, Form, Input, Button } from "antd";
+
 import request from "@/utils/request";
 
 export default function AddItemMeal(props) {
+  const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
   const [record, setRecord] = useState({});
   const [visible, setVisible] = useState(false);
@@ -35,13 +37,18 @@ export default function AddItemMeal(props) {
     { title: "配件号", dataIndex: "ManhourExpense" },
   ];
 
-  useEffect(() => {
+  const search = () => {
     const params = {
-      type: "2",
+      carType: form.getFieldValue("carType"),
+      type: "2", //维修项目
     };
     request.get("/v1/car/repair-menu", { params }).then((res) => {
       setDataSource(res?.data);
     });
+  };
+
+  useEffect(() => {
+    search();
   }, []);
 
   const showModal = () => {
@@ -65,6 +72,18 @@ export default function AddItemMeal(props) {
 
   return (
     <div>
+      <div style={{ display: "flex", lineHeight: "32px" }}>
+        <span>车牌号/车架号:</span>
+        <Form form={form}>
+          <Form.Item name="carType" noStyle>
+            <Input style={{ width: "100px" }} />
+          </Form.Item>
+        </Form>
+
+        <Button onClick={search} type={"primary"} style={{ marginLeft: "5px" }}>
+          查询
+        </Button>
+      </div>
       <Table
         rowSelection={{
           type: "radio",

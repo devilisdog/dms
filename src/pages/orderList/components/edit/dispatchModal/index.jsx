@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Modal } from "antd";
+import { Table, Modal, Form, Input, Button } from "antd";
 
 import request from "@/utils/request";
 
@@ -11,17 +11,34 @@ const colums = [
 ];
 
 export default function DispatchModal(props) {
+  const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
 
-  useEffect(() => {
-    const params = { gh: "" };
+  const search = () => {
+    const params = { gh: form.getFieldValue("gh") };
     request.get("/v1/repair/person", { params }).then((res) => {
       setDataSource(res?.data);
     });
+  };
+
+  useEffect(() => {
+    search();
   }, []);
 
   return (
     <div style={{ height: "400px", overflowY: "scroll" }}>
+      <div style={{ display: "flex", lineHeight: "32px" }}>
+        <span>计师姓名或代码:</span>
+        <Form form={form}>
+          <Form.Item name="gh" noStyle>
+            <Input style={{ width: "100px" }} />
+          </Form.Item>
+        </Form>
+
+        <Button onClick={search} type={"primary"} style={{ marginLeft: "5px" }}>
+          查询
+        </Button>
+      </div>
       <Table
         columns={colums}
         dataSource={dataSource}
