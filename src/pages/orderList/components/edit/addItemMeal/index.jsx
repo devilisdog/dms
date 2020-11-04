@@ -31,10 +31,12 @@ export default function AddItemMeal(props) {
   ];
 
   const colum2 = [
-    { title: "编码", dataIndex: "ManHourItemCode" },
-    { title: "配件名称", dataIndex: "ManHourItemName" },
-    { title: "数量", dataIndex: "StandardManHour" },
-    { title: "配件号", dataIndex: "ManhourExpense" },
+    { title: "配件号", dataIndex: "PartCode" },
+    { title: "配件名称", dataIndex: "PartName" },
+    { title: "数量", dataIndex: "SellQuantity" },
+    { title: "单价", dataIndex: "SellPrice" },
+    { title: "金额", dataIndex: "SellSum" },
+    { title: "收费区分", dataIndex: "DistinguishFlag" },
   ];
 
   const search = () => {

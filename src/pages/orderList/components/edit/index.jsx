@@ -279,13 +279,16 @@ export default function Edit(props) {
   //新建表单
   const submit = () => {
     form.validateFields().then((values) => {
+      console.log(values, "values");
       const obj = {
         ...values,
-        BuyDate: moment(values.BuyDate).format("YYYY-MM-DD"),
-        IntendingHandTime: moment(values.IntendingHandTime).format(
-          "YYYY-MM-DD"
-        ),
-        NextServiceDate: moment(values.NextServiceDate).format("YYYY-MM-DD"),
+        BuyDate: values.BuyDate && moment(values.BuyDate).format("YYYY-MM-DD"),
+        IntendingHandTime:
+          values.IntendingHandTime &&
+          moment(values.IntendingHandTime).format("YYYY-MM-DD"),
+        NextServiceDate:
+          values.NextServiceDate &&
+          moment(values.NextServiceDate).format("YYYY-MM-DD"),
       };
 
       const formData = {
@@ -311,11 +314,13 @@ export default function Edit(props) {
     form.validateFields().then((values) => {
       const obj = {
         ...values,
-        BuyDate: moment(values.BuyDate).format("YYYY-MM-DD"),
-        IntendingHandTime: moment(values.IntendingHandTime).format(
-          "YYYY-MM-DD"
-        ),
-        NextServiceDate: moment(values.NextServiceDate).format("YYYY-MM-DD"),
+        BuyDate: values.BuyDate && moment(values.BuyDate).format("YYYY-MM-DD"),
+        IntendingHandTime:
+          values.IntendingHandTime &&
+          moment(values.IntendingHandTime).format("YYYY-MM-DD"),
+        NextServiceDate:
+          values.NextServiceDate &&
+          moment(values.NextServiceDate).format("YYYY-MM-DD"),
       };
 
       const formData = {

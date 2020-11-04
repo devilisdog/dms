@@ -62,7 +62,7 @@ export default function LookPage(props) {
   //   };
 
   const {
-    person = {},
+    total,
     TBL_RepairOrder = {},
     TBL_Vehicleselect = {},
     TBL_VehicleOwner = {},
@@ -333,16 +333,12 @@ export default function LookPage(props) {
         >
           <div className="money_one" style={{ width: "300px" }}>
             <span style={{ marginRight: "16px" }}>预估合计</span>
-            <span>
-              ¥
-              {Math.round(TBL_RepairOrder?.ManHourExpense) +
-                Math.round(TBL_RepairOrder?.PartExpense)}
-            </span>
+            <span>¥{total?.total}</span>
           </div>
 
           <div className="money_two">
-            <span>人民币大写</span>
-            <span>（大写：捌佰贰拾玖元整）</span>
+            <span>人民币</span>
+            <span>{total?.total_str}</span>
           </div>
         </div>
         <Divider style={{ borderTop: "1px solid", margin: "12px 0" }} />
