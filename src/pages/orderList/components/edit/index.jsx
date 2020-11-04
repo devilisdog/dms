@@ -362,11 +362,7 @@ export default function Edit(props) {
   const userInfo = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="EditPage">
-      <Helmet
-        onChangeClientState={(newState, addedTags, removedTags) =>
-          console.log(newState, addedTags, removedTags)
-        }
-      >
+      <Helmet>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
