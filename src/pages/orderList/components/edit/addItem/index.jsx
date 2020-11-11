@@ -23,6 +23,8 @@ export default function AddItem(props) {
 
     const [dataSource, setDataSource] = useState([])
 
+    const [selectedRowKeys, setSelectedRowKeys] = useState([])
+
     const search = () => {
         const params = {
             carType: form.getFieldValue('carType'),
@@ -36,6 +38,16 @@ export default function AddItem(props) {
     //   useEffect(() => {
     //     search();
     //   }, []);
+
+    const onSelectChange = (selectedRowKeys, selectedRow) => {
+        props.getSelectedRow_Item(selectedRow)
+        setSelectedRowKeys(selectedRowKeys)
+    }
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    }
 
     return (
         <div style={{ height: '400px', overflow: 'scroll' }}>
@@ -54,16 +66,18 @@ export default function AddItem(props) {
                 </Button>
             </div>
             <Table
+                rowSelection={rowSelection}
+                rowKey={record => record.PartStorageID}
                 columns={colums}
                 dataSource={dataSource}
                 pagination={false}
-                onRow={record => {
-                    return {
-                        onClick: event => {
-                            props.handelOK(record)
-                        }, // 点击行
-                    }
-                }}
+                // onRow={record => {
+                //     return {
+                //         onClick: event => {
+                //             props.handelOK(record)
+                //         }, // 点击行
+                //     }
+                // }}
             />
         </div>
     )

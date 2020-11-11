@@ -5,8 +5,20 @@ import request from '@/utils/request'
 
 const colums = [
     { title: '项目名称', dataIndex: 'ManhourItemName' },
-    { title: '标准工时', dataIndex: 'StandardManHour' },
-    { title: '工时费', dataIndex: 'ManhourExpense' },
+    {
+        title: '标准工时',
+        dataIndex: 'StandardManHour',
+        render: text => {
+            return Number(text).toFixed(1)
+        },
+    },
+    {
+        title: '工时费',
+        dataIndex: 'ManhourExpense',
+        render: text => {
+            return Number(text).toFixed(1)
+        },
+    },
     { title: '适用车型', dataIndex: 'VehicleGroupCode' },
 ]
 
@@ -14,6 +26,10 @@ export default function AddProject(props) {
     const [form] = Form.useForm()
 
     const [dataSource, setDataSource] = useState([])
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState([])
+
+    // const [selectedRow, setSelectedRow] = useState([])
 
     const search = () => {
         const params = {
@@ -27,6 +43,16 @@ export default function AddProject(props) {
     //   useEffect(() => {
     //     search();
     //   }, []);
+
+    const onSelectChange = (selectedRowKeys, selectedRow) => {
+        props.getSelectedRow_project(selectedRow)
+        setSelectedRowKeys(selectedRowKeys)
+    }
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    }
 
     return (
         <div style={{ height: '400px', overflowY: 'scroll' }}>
@@ -43,16 +69,19 @@ export default function AddProject(props) {
                 </Button>
             </div>
             <Table
+                rowSelection={rowSelection}
                 columns={colums}
                 dataSource={dataSource}
+                rowKey={record => record.ID}
                 pagination={false}
-                onRow={record => {
-                    return {
-                        onClick: event => {
-                            props.handelOK(record)
-                        }, // 点击行
-                    }
-                }}
+
+                // onRow={record => {
+                //     return {
+                //         onClick: event => {
+                //             props.handelOK(record)
+                //         }, // 点击行
+                //     }
+                // }}
             />
         </div>
     )

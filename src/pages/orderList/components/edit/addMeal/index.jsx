@@ -36,10 +36,58 @@ export default function AddMeal(props) {
     ]
 
     const colum2 = [
-        { title: '编码', dataIndex: 'ManHourItemCode' },
-        { title: '配件名称', dataIndex: 'ManHourItemName' },
-        { title: '数量', dataIndex: 'StandardManHour' },
-        { title: '配件号', dataIndex: 'ManhourExpense' },
+        { title: '', dataIndex: 'A' },
+        { title: '', dataIndex: 'B' },
+        {
+            title: '',
+            dataIndex: 'C',
+            render: text => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'D',
+            render: text => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'E',
+            render: text => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'F',
+            render: text => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'G',
+            render: text => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
     ]
 
     const search = () => {
@@ -66,7 +114,7 @@ export default function AddMeal(props) {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            props.getmealList(selectedRows[0]?.list)
+            props.getmealList(selectedRows)
         },
         getCheckboxProps: record => ({
             disabled: record.name === 'Disabled User',
@@ -108,7 +156,7 @@ export default function AddMeal(props) {
             />
 
             <Modal title="套餐内容" visible={visible} onCancel={() => setVisible(false)} onOk={handelOK} footer={false}>
-                <Table columns={colum2} dataSource={record?.list} pagination={false} />
+                <Table columns={colum2} dataSource={record?.form_data} pagination={false} showHeader={false} />
             </Modal>
         </div>
     )
