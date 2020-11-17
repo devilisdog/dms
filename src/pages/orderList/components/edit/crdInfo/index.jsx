@@ -297,7 +297,7 @@ export default function CrdInfo(props) {
             <Row>
                 <Col span={12}>
                     <Form.Item label="车牌号">
-                        <Form.Item name="VehicleTag" noStyle>
+                        <Form.Item name="VehicleTag" noStyle rules={[{ required: true, message: '请输入车牌号' }]}>
                             <Input
                                 disabled={props.newBuild ? false : true}
                                 addonAfter={
@@ -333,7 +333,7 @@ export default function CrdInfo(props) {
                     </Form.Item>
                 </Col>
                 <Col span={12}>
-                    <Form.Item label="客户名称" name="CarOwnerName">
+                    <Form.Item label="客户名称" name="CarOwnerName" rules={[{ required: true, message: '请输入客户名称' }]}>
                         <Input
                             disabled={props.form.getFieldValue('CarOwnerName') || !props.newBuild ? true : false}
                             addonAfter={
@@ -392,7 +392,7 @@ export default function CrdInfo(props) {
                     </Form.Item>
                 </Col>
                 <Col span={12}>
-                    <Form.Item label="客户地址" name="Address">
+                    <Form.Item label="客户地址" name="Address" rules={[{ required: true, message: '请输入客户地址' }]}>
                         <Input />
                     </Form.Item>
                 </Col>
@@ -400,12 +400,12 @@ export default function CrdInfo(props) {
 
             <Row>
                 <Col span={12}>
-                    <Form.Item label="送修人" name="RepairSender">
+                    <Form.Item label="送修人" name="RepairSender" rules={[{ required: true, message: '请输入送修人' }]}>
                         <Input />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
-                    <Form.Item label="手机号码" name="Mobile">
+                    <Form.Item label="手机号码" name="Mobile" rules={[{ required: true, message: '请输入手机号码' }]}>
                         <Input />
                     </Form.Item>
                 </Col>
@@ -413,7 +413,7 @@ export default function CrdInfo(props) {
 
             <Row>
                 <Col span={12}>
-                    <Form.Item label="品牌" name="CarBrandCode">
+                    <Form.Item label="品牌" name="CarBrandCode" rules={[{ required: true, message: '请选择品牌' }]}>
                         <Select onChange={onChangeSeries}>
                             {brands.map((ele, index) => {
                                 return (
@@ -426,7 +426,7 @@ export default function CrdInfo(props) {
                     </Form.Item>
                 </Col>
                 <Col span={12}>
-                    <Form.Item label="车系" name="CarSeriesCode">
+                    <Form.Item label="车系" name="CarSeriesCode" rules={[{ required: true, message: '请选择车系' }]}>
                         <Select onChange={onChangeType}>
                             {series.map((ele, index) => {
                                 return (
@@ -442,7 +442,7 @@ export default function CrdInfo(props) {
 
             <Row>
                 <Col span={12}>
-                    <Form.Item label="车型" name="CarTypeCode">
+                    <Form.Item label="车型" name="CarTypeCode" rules={[{ required: true, message: '请选择车型' }]}>
                         <Select>
                             {types.map((ele, index) => {
                                 return (
@@ -543,7 +543,7 @@ export default function CrdInfo(props) {
                 onCancel={() => setVisible(false)}
                 visible={visible}
                 footer={false}
-                width={'80%'}
+                width={'95%'}
             >
                 <div style={{ height: '400px', overflowY: 'scroll' }}>{components[modalType]}</div>
             </Modal>

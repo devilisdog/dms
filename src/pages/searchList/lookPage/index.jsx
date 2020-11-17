@@ -135,7 +135,7 @@ export default function LookPage(props) {
                 }}
             >
                 <Helmet onChangeClientState={(newState, addedTags, removedTags) => console.log(newState, addedTags, removedTags)}>
-                    <meta name="viewport" content="width=device-width,intial-scale=0,maximum-scale=0.6,user-scalable=yes,shrink-to-fit=no" />
+                    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=0.6,user-scalable=yes,shrink-to-fit=no" />
                 </Helmet>
                 <div
                     className="pageTitle"

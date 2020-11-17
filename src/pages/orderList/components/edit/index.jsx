@@ -45,7 +45,7 @@ const tableColumns_two = [
     },
     { title: '零件号', dataIndex: 'PartCode' },
     { title: '需更换零件', dataIndex: 'PartName' },
-    { title: '数量', dataIndex: 'SellQuantity' },
+    { title: '数量', dataIndex: 'SellQuantity', editable: true },
     {
         title: '单价',
         dataIndex: 'SellPrice',
@@ -482,6 +482,7 @@ export default function Edit(props) {
             <Modal
                 title={title}
                 visible={visible}
+                destroyOnClose={true}
                 onCancel={() => setVisible(false)}
                 footer={
                     type == 'addMeal' ? (
