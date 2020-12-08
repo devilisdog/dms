@@ -56,7 +56,6 @@ const UserLayout = props => {
                 >
                     <div
                         style={{
-                            //   width: "430px",
                             backgroundColor: '#fff',
                         }}
                         className={styles.form_box}

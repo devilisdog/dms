@@ -180,7 +180,6 @@ export default class EditableTable extends React.Component {
             onChange: this.onSelectChange,
         }
 
-        console.log(dataSource, 'dataSource')
         return (
             <div>
                 <Table

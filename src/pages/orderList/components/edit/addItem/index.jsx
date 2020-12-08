@@ -6,6 +6,7 @@ import request from '@/utils/request'
 const colums = [
     { title: '零件号', dataIndex: 'PartCode' },
     { title: '零件名称', dataIndex: 'PartName' },
+    { title: '适用车型', dataIndex: 'VehicleType' },
     {
         title: '销售价',
         dataIndex: 'SellPrice1',
@@ -13,7 +14,6 @@ const colums = [
             return Math.round(text)
         },
     },
-    { title: '适用车型', dataIndex: 'VehicleType' },
     { title: '库存', dataIndex: 'StorageAmount' },
     { title: '品牌', dataIndex: 'PartBrand' },
 ]

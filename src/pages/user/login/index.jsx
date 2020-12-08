@@ -38,23 +38,25 @@ const Login = props => {
             ...values,
         }
 
-        request('/v1/login', {
-            method: 'POST',
-            data: params,
-        })
-            .then(res => {
-                if (autoLogin) {
-                    localStorage.setItem('napw', JSON.stringify(values))
-                    localStorage.setItem('autoLogin', autoLogin)
-                }
+        props.history.push('/buildOrder')
 
-                localStorage.setItem('token', res?.data?.token)
-                localStorage.setItem('user', JSON.stringify(res?.data?.user))
-                props.history.push('/buildOrder')
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        // request('/v1/login', {
+        //     method: 'POST',
+        //     data: params,
+        // })
+        //     .then(res => {
+        //         if (autoLogin) {
+        //             localStorage.setItem('napw', JSON.stringify(values))
+        //             localStorage.setItem('autoLogin', autoLogin)
+        //         }
+
+        //         localStorage.setItem('token', res?.data?.token)
+        //         localStorage.setItem('user', JSON.stringify(res?.data?.user))
+        //         props.history.push('/buildOrder')
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     })
     }
 
     return (

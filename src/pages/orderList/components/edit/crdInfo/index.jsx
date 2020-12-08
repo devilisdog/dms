@@ -5,8 +5,8 @@ import Car_btn from '@/assets/img/car_btn.png'
 import more_icon from '@/assets/img/more_icon.png'
 
 import moment from 'moment'
-import { values } from 'lodash'
 
+const { RangePicker } = DatePicker
 const { TextArea } = Input
 const { Option } = Select
 const { TabPane } = Tabs
@@ -235,7 +235,7 @@ export default function CrdInfo(props) {
                                     CarOwnerCode_right: record?.CarOwnerCode,
                                     ID: record?.ID,
                                     BuyDate: record?.BuyDate ? moment(record?.BuyDate, 'YYYY-MM-DD') : '',
-                                    IntendingHandTime: record?.IntendingHandTime ? moment(record?.IntendingHandTime, 'YYYY-MM-DD') : '',
+                                    IntendingHandTime: record?.IntendingHandTime ? moment(record?.IntendingHandTime, 'YYYY-MM-DD HH:mm') : '',
                                     NextServiceDate: record?.NextServiceDate ? moment(record?.NextServiceDate, 'YYYY-MM-DD') : '',
                                 })
                             }, // 点击行
@@ -281,7 +281,7 @@ export default function CrdInfo(props) {
                                     CarOwnerCode_right: record?.CarOwnerCode,
                                     CreateDate: record?.CreateDate,
                                     BuyDate: record?.BuyDate ? moment(record?.BuyDate, 'YYYY-MM-DD') : '',
-                                    IntendingHandTime: record?.IntendingHandTime ? moment(record?.IntendingHandTime, 'YYYY-MM-DD') : '',
+                                    IntendingHandTime: record?.IntendingHandTime ? moment(record?.IntendingHandTime, 'YYYY-MM-DD HH:mm') : '',
                                     NextServiceDate: record?.NextServiceDate ? moment(record?.NextServiceDate, 'YYYY-MM-DD') : '',
                                 })
                             }, // 点击行
@@ -406,7 +406,7 @@ export default function CrdInfo(props) {
                 </Col>
                 <Col span={12}>
                     <Form.Item label="手机号码" name="Mobile" rules={[{ required: true, message: '请输入手机号码' }]}>
-                        <Input />
+                        <Input maxLength={11} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -456,7 +456,7 @@ export default function CrdInfo(props) {
                 </Col>
                 <Col span={12}>
                     <Form.Item label="VIN" name="UnderPan" rules={[{ required: true, message: 'VIN必填' }]}>
-                        <Input />
+                        <Input maxLength={17} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -479,8 +479,8 @@ export default function CrdInfo(props) {
                     </Form.Item>
                 </Col>
                 <Col span={12}>
-                    <Form.Item label="预交车时间" name="IntendingHandTime">
-                        <DatePicker style={{ width: '100%' }} />
+                    <Form.Item label="预交车时间" name="IntendingHandTime" className="IntendingHandTime">
+                        <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm" />
                     </Form.Item>
                 </Col>
             </Row>

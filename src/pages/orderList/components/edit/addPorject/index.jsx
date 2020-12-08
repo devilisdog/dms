@@ -5,13 +5,7 @@ import request from '@/utils/request'
 
 const colums = [
     { title: '项目名称', dataIndex: 'ManhourItemName' },
-    {
-        title: '标准工时',
-        dataIndex: 'StandardManHour',
-        render: text => {
-            return Number(text).toFixed(1)
-        },
-    },
+    { title: '适用车型', dataIndex: 'VehicleGroupCode' },
     {
         title: '工时费',
         dataIndex: 'ManhourExpense',
@@ -19,7 +13,13 @@ const colums = [
             return Number(text).toFixed(1)
         },
     },
-    { title: '适用车型', dataIndex: 'VehicleGroupCode' },
+    {
+        title: '标准工时',
+        dataIndex: 'StandardManHour',
+        render: text => {
+            return Number(text).toFixed(1)
+        },
+    },
 ]
 
 export default function AddProject(props) {

@@ -118,7 +118,7 @@ export default function Edit(props) {
                 UnderPan: TBL_Vehicleselect?.UnderPan,
                 Telephone1: TBL_VehicleOwner?.Telephone1,
                 BuyDate: TBL_Vehicleselect?.BuyDate ? moment(TBL_Vehicleselect?.BuyDate, 'YYYY-MM-DD') : '',
-                IntendingHandTime: TBL_RepairOrder?.IntendingHandTime ? moment(TBL_RepairOrder?.IntendingHandTime, 'YYYY-MM-DD') : '',
+                IntendingHandTime: TBL_RepairOrder?.IntendingHandTime ? moment(TBL_RepairOrder?.IntendingHandTime, 'YYYY-MM-DD HH:mm') : '',
                 RunMileage: TBL_Vehicleselect?.RunMileage,
                 RunMileage_sub: TBL_Vehicleselect?.RunMileage,
                 NextServiceMileage: TBL_Vehicleselect?.NextServiceMileage,
@@ -298,7 +298,7 @@ export default function Edit(props) {
             const obj = {
                 ...values,
                 BuyDate: values.BuyDate && moment(values.BuyDate).format('YYYY-MM-DD'),
-                IntendingHandTime: values.IntendingHandTime && moment(values.IntendingHandTime).format('YYYY-MM-DD'),
+                IntendingHandTime: values.IntendingHandTime && moment(values.IntendingHandTime).format('YYYY-MM-DD HH:mm'),
                 NextServiceDate: values.NextServiceDate && moment(values.NextServiceDate).format('YYYY-MM-DD'),
             }
 
@@ -326,7 +326,7 @@ export default function Edit(props) {
             const obj = {
                 ...values,
                 BuyDate: values.BuyDate && moment(values.BuyDate).format('YYYY-MM-DD'),
-                IntendingHandTime: values.IntendingHandTime && moment(values.IntendingHandTime).format('YYYY-MM-DD'),
+                IntendingHandTime: values.IntendingHandTime && moment(values.IntendingHandTime).format('YYYY-MM-DD HH:mm'),
                 NextServiceDate: values.NextServiceDate && moment(values.NextServiceDate).format('YYYY-MM-DD'),
             }
 
