@@ -123,12 +123,16 @@ export default function CrdInfo(props) {
             const params = {
                 vehicleTag: props?.TBL_RepairOrder?.VehicleTag,
             }
-            request.get('/v1/vehicle/repair-project', { params }).then(res => {
-                setDataSource(res?.data)
-            })
-            request.get('/v1/vehicle/repair-part', { params }).then(res => {
-                setDataSource_other(res?.data)
-            })
+
+            if (props?.TBL_RepairOrder?.VehicleTag) {
+                request.get('/v1/vehicle/repair-project', { params }).then(res => {
+                    setDataSource(res?.data)
+                })
+                request.get('/v1/vehicle/repair-part', { params }).then(res => {
+                    setDataSource_other(res?.data)
+                })
+            }
+
             setTitle('维修历史查询')
         }
 
@@ -299,7 +303,7 @@ export default function CrdInfo(props) {
                     <Form.Item label="车牌号">
                         <Form.Item name="VehicleTag" noStyle rules={[{ required: true, message: '请输入车牌号' }]}>
                             <Input
-                                disabled={props.newBuild ? false : true}
+                                disabled={props.form.getFieldValue('VehicleTag') || !props.newBuild ? true : false}
                                 addonAfter={
                                     props.newBuild ? (
                                         <>
@@ -475,12 +479,24 @@ export default function CrdInfo(props) {
             <Row>
                 <Col span={12}>
                     <Form.Item label="购车日期" name="BuyDate">
-                        <DatePicker style={{ width: '100%' }} />
+                        <DatePicker
+                            style={{ width: '100%' }}
+                            focus={() => {
+                                document.activeElement.blur()
+                            }}
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item label="预交车时间" name="IntendingHandTime" className="IntendingHandTime">
-                        <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm" />
+                        <DatePicker
+                            style={{ width: '100%' }}
+                            showTime
+                            format="YYYY-MM-DD HH:mm"
+                            focus={() => {
+                                document.activeElement.blur()
+                            }}
+                        />
                     </Form.Item>
                 </Col>
             </Row>
@@ -527,7 +543,12 @@ export default function CrdInfo(props) {
             <Row>
                 <Col span={12}>
                     <Form.Item label="下次保养日" name="NextServiceDate">
-                        <DatePicker style={{ width: '100%' }} />
+                        <DatePicker
+                            style={{ width: '100%' }}
+                            focus={() => {
+                                document.activeElement.blur()
+                            }}
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
