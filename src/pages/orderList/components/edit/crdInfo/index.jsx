@@ -479,24 +479,12 @@ export default function CrdInfo(props) {
             <Row>
                 <Col span={12}>
                     <Form.Item label="购车日期" name="BuyDate">
-                        <DatePicker
-                            style={{ width: '100%' }}
-                            focus={() => {
-                                document.activeElement.blur()
-                            }}
-                        />
+                        <DatePicker style={{ width: '100%' }} inputReadOnly={true} />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item label="预交车时间" name="IntendingHandTime" className="IntendingHandTime">
-                        <DatePicker
-                            style={{ width: '100%' }}
-                            showTime
-                            format="YYYY-MM-DD HH:mm"
-                            focus={() => {
-                                document.activeElement.blur()
-                            }}
-                        />
+                        <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm" inputReadOnly={true} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -543,12 +531,7 @@ export default function CrdInfo(props) {
             <Row>
                 <Col span={12}>
                     <Form.Item label="下次保养日" name="NextServiceDate">
-                        <DatePicker
-                            style={{ width: '100%' }}
-                            focus={() => {
-                                document.activeElement.blur()
-                            }}
-                        />
+                        <DatePicker style={{ width: '100%' }} inputReadOnly={true} />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
