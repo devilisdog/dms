@@ -3,6 +3,7 @@ import { Table, Modal, Form, Input, Button } from 'antd'
 import request from '@/utils/request'
 
 export default function AddMeal(props) {
+    const { VehicleTag = '' } = props
     const [form] = Form.useForm()
     const [dataSource, setDataSource] = useState([])
     const [record, setRecord] = useState({})
@@ -14,7 +15,7 @@ export default function AddMeal(props) {
         {
             title: '工时费',
             dataIndex: 'RepairMenuExpense',
-            render: text => {
+            render: (text) => {
                 return <div>{Number(text).toFixed(1)}</div>
             },
         },
@@ -41,7 +42,7 @@ export default function AddMeal(props) {
         {
             title: '',
             dataIndex: 'C',
-            render: text => {
+            render: (text) => {
                 if (text?.indexOf('00') > 0) {
                     return Number(text).toFixed(1)
                 }
@@ -51,7 +52,7 @@ export default function AddMeal(props) {
         {
             title: '',
             dataIndex: 'D',
-            render: text => {
+            render: (text) => {
                 if (text?.indexOf('00') > 0) {
                     return Number(text).toFixed(1)
                 }
@@ -61,7 +62,7 @@ export default function AddMeal(props) {
         {
             title: '',
             dataIndex: 'E',
-            render: text => {
+            render: (text) => {
                 if (text?.indexOf('00') > 0) {
                     return Number(text).toFixed(1)
                 }
@@ -71,7 +72,7 @@ export default function AddMeal(props) {
         {
             title: '',
             dataIndex: 'F',
-            render: text => {
+            render: (text) => {
                 if (text?.indexOf('00') > 0) {
                     return Number(text).toFixed(1)
                 }
@@ -81,7 +82,7 @@ export default function AddMeal(props) {
         {
             title: '',
             dataIndex: 'G',
-            render: text => {
+            render: (text) => {
                 if (text?.indexOf('00') > 0) {
                     return Number(text).toFixed(1)
                 }
@@ -95,12 +96,13 @@ export default function AddMeal(props) {
             carType: form.getFieldValue('carType'),
             type: '1', //维修项目
         }
-        request.get('/v1/car/repair-menu', { params }).then(res => {
+        request.get('/v1/car/repair-menu', { params }).then((res) => {
             setDataSource(res?.data)
         })
     }
 
     useEffect(() => {
+        form.setFieldsValue({ carType: VehicleTag })
         search()
     }, [])
 
@@ -116,7 +118,7 @@ export default function AddMeal(props) {
         onChange: (selectedRowKeys, selectedRows) => {
             props.getmealList(selectedRows)
         },
-        getCheckboxProps: record => ({
+        getCheckboxProps: (record) => ({
             disabled: record.name === 'Disabled User',
             // Column configuration not to be checked
             name: record.name,
@@ -126,10 +128,10 @@ export default function AddMeal(props) {
     return (
         <div>
             <div style={{ display: 'flex', lineHeight: '32px' }}>
-                <span>车牌号/车架号:</span>
+                <span>车牌/车架号:</span>
                 <Form form={form}>
                     <Form.Item name="carType" noStyle>
-                        <Input style={{ width: '100px' }} />
+                        <Input style={{ width: '110px' }} />
                     </Form.Item>
                 </Form>
 
@@ -145,7 +147,7 @@ export default function AddMeal(props) {
                 columns={colums}
                 dataSource={dataSource}
                 pagination={false}
-                rowKey={record => record.RepairMenuCode}
+                rowKey={(record) => record.RepairMenuCode}
                 // onRow={(record) => {
                 //   return {
                 //     onClick: (event) => {

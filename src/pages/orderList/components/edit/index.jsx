@@ -30,7 +30,7 @@ const tableColumns = [
         title: '工时费',
         dataIndex: 'ManhourExpense',
         editable: true,
-        render: text => {
+        render: (text) => {
             return <div>{Number(text).toFixed(1)}</div>
         },
     },
@@ -49,14 +49,14 @@ const tableColumns_two = [
     {
         title: '单价',
         dataIndex: 'SellPrice',
-        render: text => {
+        render: (text) => {
             return <div>{Number(text).toFixed(1)}</div>
         },
     },
     {
         title: '金额',
         dataIndex: 'SellSum',
-        render: text => {
+        render: (text) => {
             return <div>{Number(text).toFixed(1)}</div>
         },
     },
@@ -94,7 +94,7 @@ export default function Edit(props) {
             is_edit: 1,
             // ...formdata,
         }
-        request.get('/v1/order/info', { params }).then(res => {
+        request.get('/v1/order/info', { params }).then((res) => {
             setData(res?.data)
 
             const { TBL_ManHourExpense, TBL_RepairOrder, TBL_RepairPartItem, TBL_VehicleOwner, TBL_Vehicleselect } = res?.data
@@ -144,8 +144,14 @@ export default function Edit(props) {
         }
     }, [])
 
-    const showModal = type => {
-        const obj = { addProject: '新增项目', addMeal: '新增套餐', addItem: '新增零件', addItemMeal: '新增零件套餐', dispatch: '派工' }
+    const showModal = (type) => {
+        const obj = {
+            addProject: '新增项目',
+            addMeal: '新增套餐',
+            addItem: '新增零件',
+            addItemMeal: '剩余套餐',
+            dispatch: '派工',
+        }
 
         setType(type)
         setVisible(true)
@@ -159,7 +165,7 @@ export default function Edit(props) {
     //*
 
     //得到添加项目选择之后的数组
-    const getSelectedRow_project = selectedRow => {
+    const getSelectedRow_project = (selectedRow) => {
         const arr = []
         selectedRow.map((ele, index) => {
             arr.push({
@@ -178,7 +184,7 @@ export default function Edit(props) {
     }
 
     //得到添加零件选择之后的数组
-    const getSelectedRow_Item = selectedRow => {
+    const getSelectedRow_Item = (selectedRow) => {
         const arr = []
         selectedRow.map((ele, index) => {
             arr.push({
@@ -201,7 +207,7 @@ export default function Edit(props) {
     }
 
     //添加套餐
-    const handelOK_addMeal = addMealRow => {
+    const handelOK_addMeal = (addMealRow) => {
         const { list_repair, list_item } = addMealRow[0]
         //更新项目数组
         const arr = []
@@ -232,26 +238,26 @@ export default function Edit(props) {
     }
 
     //得到维修措施套餐中的list
-    const getmealList = selectedRows => {
+    const getmealList = (selectedRows) => {
         setaddMealList(selectedRows)
     }
 
     //删除之后的数组
-    const getlist = list => {
+    const getlist = (list) => {
         setDataSource(list)
     }
 
     //获取选择table的key
-    const getRow = row => {
+    const getRow = (row) => {
         setRow(row)
     }
 
     //派工后修改数组
-    const getPerson = personRecord => {
+    const getPerson = (personRecord) => {
         const newData = _.cloneDeep(dataSource)
 
         dataSource.map((ele, index) => {
-            row.map(item => {
+            row.map((item) => {
                 if (ele.Id == item || ele.ID == item || ele.key == item) {
                     newData.splice(index, 1, {
                         ...ele,
@@ -284,17 +290,17 @@ export default function Edit(props) {
     }
 
     //删除之后的数组
-    const get_Op_list = list => {
+    const get_Op_list = (list) => {
         setDataSourceMeal(list)
     }
 
-    const getKeyArr = data => {
+    const getKeyArr = (data) => {
         setKeyArr(list)
     }
 
     //新建表单
     const submit = () => {
-        form.validateFields().then(values => {
+        form.validateFields().then((values) => {
             const obj = {
                 ...values,
                 BuyDate: values.BuyDate && moment(values.BuyDate).format('YYYY-MM-DD'),
@@ -311,7 +317,7 @@ export default function Edit(props) {
             request('/v1/order/create', {
                 method: 'POST',
                 data: formData,
-            }).then(res => {
+            }).then((res) => {
                 if (res?.data?.RepairOrderCode) {
                     message.success('新建成功！')
                     history.push(`/searchList/lookPage/${res?.data?.RepairOrderCode}`)
@@ -322,7 +328,7 @@ export default function Edit(props) {
 
     //编辑表单
     const editSumit = () => {
-        form.validateFields().then(values => {
+        form.validateFields().then((values) => {
             const obj = {
                 ...values,
                 BuyDate: values.BuyDate && moment(values.BuyDate).format('YYYY-MM-DD'),
@@ -341,11 +347,11 @@ export default function Edit(props) {
                 method: 'POST',
                 data: formData,
             })
-                .then(res => {
+                .then((res) => {
                     message.success('编辑成功！')
                     history.push(`/searchList/lookPage/${TBL_RepairOrder?.RepairOrderCode}`)
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err, 'err')
                 })
         })
@@ -353,22 +359,56 @@ export default function Edit(props) {
 
     const componentsObj = {
         addProject: <AddPorject getSelectedRow_project={getSelectedRow_project} />, //新增项目
-        addMeal: <AddMeal getmealList={getmealList} />, //新增套餐
+        addMeal: <AddMeal getmealList={getmealList} VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} />, //新增套餐
         dispatch: <DispatchModal handelOK={getPerson} />, //派工
-
         addItem: <AddItem getSelectedRow_Item={getSelectedRow_Item} />, //新增零件
-        // addItemMeal: <AddItemMeal getItemMealList={getItemMealList} />, //新增零件套餐
+        addItemMeal: <AddItemMeal VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} getmealList={getmealList} />, //选择剩余项目
     }
 
     const { TBL_RepairOrder } = data
 
-    const titleDom = name => {
+    const titleDom = (name) => {
         return (
             <div>
                 <div style={{ fontSize: '16px' }}>{name}</div>
                 <Divider className="divider" />
             </div>
         )
+    }
+
+    const modalFooterButObj = {
+        addMeal: (
+            <Button
+                type="primary"
+                onClick={() => {
+                    handelOK_addMeal(addMealList)
+                }}
+                disabled={addMealList.length > 0 ? false : true}
+            >
+                确定
+            </Button>
+        ),
+        addProject: (
+            <Button type="primary" onClick={project_confirm} disabled={false}>
+                确定
+            </Button>
+        ),
+        addItem: (
+            <Button type="primary" onClick={item_confirm} disabled={false}>
+                确定
+            </Button>
+        ),
+        addItemMeal: (
+            <Button
+                type="primary"
+                onClick={() => {
+                    handelOK_addMeal(addMealList)
+                }}
+                disabled={addMealList.length > 0 ? false : true}
+            >
+                确定
+            </Button>
+        ),
     }
     const userInfo = JSON.parse(localStorage.getItem('user'))
     return (
@@ -395,6 +435,9 @@ export default function Edit(props) {
                     <Button type="primary" onClick={() => showModal('addMeal')} style={{ margin: '0 5px' }}>
                         新增套餐
                     </Button>
+                    <Button type="primary" onClick={() => showModal('addItemMeal')} style={{ marginRight: '5px' }}>
+                        剩余项目
+                    </Button>
                     <Button type="primary" onClick={() => showModal('dispatch')} disabled={row.length > 0 ? false : true}>
                         派工
                     </Button>
@@ -406,9 +449,7 @@ export default function Edit(props) {
                     <Button type="primary" onClick={() => showModal('addItem')} style={{ marginRight: '5px' }}>
                         新增零件
                     </Button>
-                    {/* <Button type="primary" onClick={() => showModal('addItemMeal')}>
-                        新增套餐
-                    </Button> */}
+
                     <EditTableMeal form={form} tableColumns={tableColumns_two} dataSource={dataSourceMeal} getlist={get_Op_list} getRow={getKeyArr} />
                 </div>
 
@@ -457,13 +498,25 @@ export default function Edit(props) {
             </Form>
 
             {newBuild ? (
-                <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignContent: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
                     <Button type="primary" onClick={submit}>
                         保存工单
                     </Button>
                 </div>
             ) : (
-                <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignContent: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
                     <div style={{ width: '200px' }}>
                         <Button type="primary" style={{ marginRight: '10px' }} onClick={editSumit}>
                             保存工单
@@ -479,35 +532,7 @@ export default function Edit(props) {
                 </div>
             )}
 
-            <Modal
-                title={title}
-                visible={visible}
-                destroyOnClose={true}
-                onCancel={() => setVisible(false)}
-                footer={
-                    type == 'addMeal' ? (
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                handelOK_addMeal(addMealList)
-                            }}
-                            disabled={addMealList.length > 0 ? false : true}
-                        >
-                            确定
-                        </Button>
-                    ) : type == 'addProject' ? (
-                        <Button type="primary" onClick={project_confirm} disabled={false}>
-                            确定
-                        </Button>
-                    ) : type == 'addItem' ? (
-                        <Button type="primary" onClick={item_confirm} disabled={false}>
-                            确定
-                        </Button>
-                    ) : (
-                        false
-                    )
-                }
-            >
+            <Modal title={title} visible={visible} destroyOnClose={true} onCancel={() => setVisible(false)} footer={modalFooterButObj[type]}>
                 {componentsObj[type]}
             </Modal>
         </div>

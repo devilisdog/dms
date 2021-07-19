@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Modal, Form, Input, Button } from 'antd'
-
 import request from '@/utils/request'
 
-export default function AddItemMeal(props) {
-    const [form] = Form.useForm()
+export default function AddMeal(props) {
     const [dataSource, setDataSource] = useState([])
     const [record, setRecord] = useState({})
     const [visible, setVisible] = useState(false)
@@ -15,7 +13,7 @@ export default function AddItemMeal(props) {
         {
             title: '工时费',
             dataIndex: 'RepairMenuExpense',
-            render: text => {
+            render: (text) => {
                 return <div>{Number(text).toFixed(1)}</div>
             },
         },
@@ -37,20 +35,66 @@ export default function AddItemMeal(props) {
     ]
 
     const colum2 = [
-        { title: '配件号', dataIndex: 'PartCode' },
-        { title: '配件名称', dataIndex: 'PartName' },
-        { title: '数量', dataIndex: 'SellQuantity' },
-        { title: '单价', dataIndex: 'SellPrice' },
-        { title: '金额', dataIndex: 'SellSum' },
-        { title: '收费区分', dataIndex: 'DistinguishFlag' },
+        { title: '', dataIndex: 'A' },
+        { title: '', dataIndex: 'B' },
+        {
+            title: '',
+            dataIndex: 'C',
+            render: (text) => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'D',
+            render: (text) => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'E',
+            render: (text) => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'F',
+            render: (text) => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
+        {
+            title: '',
+            dataIndex: 'G',
+            render: (text) => {
+                if (text?.indexOf('00') > 0) {
+                    return Number(text).toFixed(1)
+                }
+                return text
+            },
+        },
     ]
 
     const search = () => {
         const params = {
-            carType: form.getFieldValue('carType'),
-            type: '2', //维修项目
+            carType: props.VehicleTag,
+            type: '1', //维修项目
         }
-        request.get('/v1/car/repair-menu', { params }).then(res => {
+        request.get('/v1/car/repair-menu', { params }).then((res) => {
             setDataSource(res?.data)
         })
     }
@@ -69,9 +113,9 @@ export default function AddItemMeal(props) {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            props.getItemMealList(selectedRows[0]?.list)
+            props.getmealList(selectedRows)
         },
-        getCheckboxProps: record => ({
+        getCheckboxProps: (record) => ({
             disabled: record.name === 'Disabled User',
             // Column configuration not to be checked
             name: record.name,
@@ -80,18 +124,6 @@ export default function AddItemMeal(props) {
 
     return (
         <div>
-            <div style={{ display: 'flex', lineHeight: '32px' }}>
-                <span>车牌号/车架号:</span>
-                <Form form={form}>
-                    <Form.Item name="carType" noStyle>
-                        <Input style={{ width: '100px' }} />
-                    </Form.Item>
-                </Form>
-
-                <Button onClick={search} type={'primary'} style={{ marginLeft: '5px' }}>
-                    查询
-                </Button>
-            </div>
             <Table
                 rowSelection={{
                     type: 'radio',
@@ -100,7 +132,7 @@ export default function AddItemMeal(props) {
                 columns={colums}
                 dataSource={dataSource}
                 pagination={false}
-                rowKey={record => record.RepairMenuCode}
+                rowKey={(record) => record.RepairMenuCode}
                 // onRow={(record) => {
                 //   return {
                 //     onClick: (event) => {
@@ -111,7 +143,7 @@ export default function AddItemMeal(props) {
             />
 
             <Modal title="套餐内容" visible={visible} onCancel={() => setVisible(false)} onOk={handelOK} footer={false}>
-                <Table columns={colum2} dataSource={record?.list} pagination={false} />
+                <Table columns={colum2} dataSource={record?.form_data} pagination={false} showHeader={false} />
             </Modal>
         </div>
     )
