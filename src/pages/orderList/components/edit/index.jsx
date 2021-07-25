@@ -88,6 +88,9 @@ export default function Edit(props) {
     //新增零件选中
     const [selectRow_Item, setSelectRow_Item] = useState([])
 
+    //剩余项目选中
+    const [itmeMealInfoData, setItmeMealInfoData] = useState([])
+
     const searchDetail = () => {
         const params = {
             code: code,
@@ -357,12 +360,46 @@ export default function Edit(props) {
         })
     }
 
+    const getItemMealKeys = (keys) => {
+        const params = {
+            itemCode: `${keys.join(',')}`,
+        }
+        request
+            .get('/v1/info/remaining-items', { params })
+            .then((res) => {
+                console.log(res, 'res')
+                if (Array.isArray(res.data)) {
+                    const arr = []
+                    res.data.map((ele, index) => {
+                        arr.push({
+                            ...ele,
+                            key: Math.random().toString(36).substr(3, 10),
+                            ID: ele.PartStorageID,
+                            SellQuantity: getNumValue(ele?.Quantity),
+                            SellPrice: getNumValue(ele?.SellPrice1),
+                            SellSum: getNumValue(parseFloat(ele?.SellPrice1) * parseFloat(ele?.Quantity)),
+                        })
+                    })
+                    setItmeMealInfoData(arr)
+                }
+            })
+            .catch((err) => {
+                console.log(err, 'err')
+            })
+    }
+
+    const handelOK_addItemMeal = () => {
+        setDataSourceMeal([...itmeMealInfoData, ...dataSourceMeal])
+
+        setVisible(false)
+    }
+
     const componentsObj = {
         addProject: <AddPorject getSelectedRow_project={getSelectedRow_project} />, //新增项目
         addMeal: <AddMeal getmealList={getmealList} VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} />, //新增套餐
         dispatch: <DispatchModal handelOK={getPerson} />, //派工
         addItem: <AddItem getSelectedRow_Item={getSelectedRow_Item} />, //新增零件
-        addItemMeal: <AddItemMeal VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} getmealList={getmealList} />, //选择剩余项目
+        addItemMeal: <AddItemMeal VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} getItemMealKeys={getItemMealKeys} />, //选择剩余项目
     }
 
     const { TBL_RepairOrder } = data
@@ -399,18 +436,13 @@ export default function Edit(props) {
             </Button>
         ),
         addItemMeal: (
-            <Button
-                type="primary"
-                onClick={() => {
-                    handelOK_addMeal(addMealList)
-                }}
-                disabled={addMealList.length > 0 ? false : true}
-            >
+            <Button type="primary" onClick={handelOK_addItemMeal} disabled={itmeMealInfoData.length > 0 ? false : true}>
                 确定
             </Button>
         ),
     }
     const userInfo = JSON.parse(localStorage.getItem('user'))
+
     return (
         <div className="EditPage">
             <Helmet>
@@ -435,9 +467,6 @@ export default function Edit(props) {
                     <Button type="primary" onClick={() => showModal('addMeal')} style={{ margin: '0 5px' }}>
                         新增套餐
                     </Button>
-                    <Button type="primary" onClick={() => showModal('addItemMeal')} style={{ marginRight: '5px' }}>
-                        剩余项目
-                    </Button>
                     <Button type="primary" onClick={() => showModal('dispatch')} disabled={row.length > 0 ? false : true}>
                         派工
                     </Button>
@@ -448,6 +477,10 @@ export default function Edit(props) {
                     {titleDom('三.更换零件')}
                     <Button type="primary" onClick={() => showModal('addItem')} style={{ marginRight: '5px' }}>
                         新增零件
+                    </Button>
+
+                    <Button type="primary" onClick={() => showModal('addItemMeal')} style={{ marginRight: '5px' }}>
+                        剩余项目
                     </Button>
 
                     <EditTableMeal form={form} tableColumns={tableColumns_two} dataSource={dataSourceMeal} getlist={get_Op_list} getRow={getKeyArr} />

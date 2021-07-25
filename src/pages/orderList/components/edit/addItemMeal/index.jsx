@@ -18,20 +18,6 @@ export default function AddMeal(props) {
             },
         },
         { title: '适用车型', dataIndex: 'VehicleGroupCode' },
-        {
-            title: '查看套餐',
-            dataIndex: 'op',
-            render: (text, record) => (
-                <a
-                    onClick={() => {
-                        showModal()
-                        setRecord(record)
-                    }}
-                >
-                    查看
-                </a>
-            ),
-        },
     ]
 
     const colum2 = [
@@ -91,10 +77,9 @@ export default function AddMeal(props) {
 
     const search = () => {
         const params = {
-            carType: props.VehicleTag,
-            type: '1', //维修项目
+            vehicleTag: props.VehicleTag,
         }
-        request.get('/v1/car/repair-menu', { params }).then((res) => {
+        request.get('/v1/user/vip-items', { params }).then((res) => {
             setDataSource(res?.data)
         })
     }
@@ -113,7 +98,7 @@ export default function AddMeal(props) {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            props.getmealList(selectedRows)
+            props.getItemMealKeys(selectedRowKeys)
         },
         getCheckboxProps: (record) => ({
             disabled: record.name === 'Disabled User',
@@ -126,13 +111,12 @@ export default function AddMeal(props) {
         <div>
             <Table
                 rowSelection={{
-                    type: 'radio',
                     ...rowSelection,
                 }}
                 columns={colums}
                 dataSource={dataSource}
                 pagination={false}
-                rowKey={(record) => record.RepairMenuCode}
+                rowKey={(record) => record.ItemCode}
                 // onRow={(record) => {
                 //   return {
                 //     onClick: (event) => {
@@ -143,7 +127,7 @@ export default function AddMeal(props) {
             />
 
             <Modal title="套餐内容" visible={visible} onCancel={() => setVisible(false)} onOk={handelOK} footer={false}>
-                <Table columns={colum2} dataSource={record?.form_data} pagination={false} showHeader={false} />
+                <Table columns={colum2} dataSource={record?.form_data} pagination={false} showHeader={false} rowKey={(record) => record.ItemCode} />
             </Modal>
         </div>
     )
