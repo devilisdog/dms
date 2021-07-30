@@ -91,6 +91,9 @@ export default function Edit(props) {
     //剩余项目选中
     const [itmeMealInfoData, setItmeMealInfoData] = useState([])
 
+    //剩余套餐的id
+    const [mealID, setmealID] = useState([])
+
     const searchDetail = () => {
         const params = {
             code: code,
@@ -315,6 +318,7 @@ export default function Edit(props) {
                 carOwnerInfo: obj,
                 postRepairItem: dataSource,
                 postPartItem: dataSourceMeal,
+                id: mealID,
             }
 
             request('/v1/order/create', {
@@ -340,6 +344,7 @@ export default function Edit(props) {
             }
 
             const formData = {
+                id: mealID,
                 carOwnerInfo: obj,
                 postRepairItem: dataSource,
                 postPartItem: dataSourceMeal,
@@ -360,7 +365,8 @@ export default function Edit(props) {
         })
     }
 
-    const getItemMealKeys = (keys) => {
+    const getItemMealKeys = (keys, mealID) => {
+        setmealID(mealID)
         const params = {
             itemCode: `${keys.join(',')}`,
         }
@@ -374,7 +380,7 @@ export default function Edit(props) {
                         arr.push({
                             ...ele,
                             key: Math.random().toString(36).substr(3, 10),
-                            ID: ele.PartStorageID,
+                            ID: ele.RepairMenuPartID,
                             SellQuantity: getNumValue(ele?.Quantity),
                             SellPrice: getNumValue(ele?.SellPrice1),
                             SellSum: getNumValue(parseFloat(ele?.SellPrice1) * parseFloat(ele?.Quantity)),

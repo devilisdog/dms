@@ -31,7 +31,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
         })
     }
 
-    const save = async e => {
+    const save = async (e) => {
         try {
             const values = await form.validateFields()
             toggleEdit()
@@ -102,18 +102,18 @@ export default class EditableTable extends React.Component {
         }
     }
 
-    handleDelete = key => {
+    handleDelete = (key) => {
         const dataSource = [...this.state.dataSource]
         this.setState({
-            dataSource: dataSource.filter(item => (item.key || item.ID || item.Id || item.region_no) !== key),
+            dataSource: dataSource.filter((item) => (item.key || item.ID || item.Id || item.region_no || item[0]) !== key),
         })
 
-        this.props.getlist(dataSource.filter(item => (item.key || item.ID || item.Id || item.region_no) !== key))
+        this.props.getlist(dataSource.filter((item) => (item.key || item.ID || item.Id || item.region_no || item[0]) !== key))
     }
 
-    handleSave = row => {
+    handleSave = (row) => {
         const newData = [...this.state.dataSource]
-        const index = newData.findIndex(item => (row.Id || row.region_no || row.key || row.ID) === (item.Id || item.region_no || item.key || item.ID))
+        const index = newData.findIndex((item) => (row.Id || row.region_no || row.key || row.ID || row[0]) === (item.Id || item.region_no || item.key || item.ID || item[0]))
         const item = newData[index]
         newData.splice(index, 1, { ...item, ...row })
         this.setState({
@@ -129,7 +129,7 @@ export default class EditableTable extends React.Component {
             title: '操作',
             dataIndex: 'operation',
             render: (text, record) => {
-                const key = record.key || record.ID || record.Id || record.region_no
+                const key = record.key || record.ID || record.Id || record.region_no || record[0]
                 return record.DistinguishFlag == 'HS' || record.IsAccount == 1 ? null : (
                     <Popconfirm title="确定删除数据?" onConfirm={() => this.handleDelete(key)}>
                         <span style={{ color: 'red' }}>删除</span>
@@ -152,14 +152,14 @@ export default class EditableTable extends React.Component {
                 cell: EditableCell,
             },
         }
-        const columns = this.columns.map(col => {
+        const columns = this.columns.map((col) => {
             if (!col.editable) {
                 return col
             }
 
             return {
                 ...col,
-                onCell: record => ({
+                onCell: (record) => ({
                     record,
                     editable: record.DistinguishFlag == 'HS' || record.IsAccount == '1' ? false : col.editable,
                     dataIndex: col.dataIndex,
@@ -184,7 +184,7 @@ export default class EditableTable extends React.Component {
                     dataSource={dataSource}
                     columns={columns}
                     pagination={false}
-                    rowKey={record => record.key || record.Id || record.ID}
+                    rowKey={(record) => record.key || record.Id || record.ID}
                 />
             </div>
         )
