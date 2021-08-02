@@ -473,6 +473,9 @@ export default function Edit(props) {
                     <Button type="primary" onClick={() => showModal('addMeal')} style={{ margin: '0 5px' }}>
                         新增套餐
                     </Button>
+                    <Button type="primary" onClick={() => showModal('addItemMeal')} style={{ marginRight: '5px' }}>
+                        剩余项目
+                    </Button>
                     <Button type="primary" onClick={() => showModal('dispatch')} disabled={row.length > 0 ? false : true}>
                         派工
                     </Button>
@@ -485,9 +488,7 @@ export default function Edit(props) {
                         新增零件
                     </Button>
 
-                    <Button type="primary" onClick={() => showModal('addItemMeal')} style={{ marginRight: '5px' }}>
-                        剩余项目
-                    </Button>
+                   
 
                     <EditTableMeal form={form} tableColumns={tableColumns_two} dataSource={dataSourceMeal} getlist={get_Op_list} getRow={getKeyArr} />
                 </div>

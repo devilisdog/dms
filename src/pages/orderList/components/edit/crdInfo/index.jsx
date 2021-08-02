@@ -213,7 +213,7 @@ export default function CrdInfo(props) {
                 <div style={{ display: 'flex', lineHeight: '32px' }}>
                     <span>车牌/车架号:</span>
                     <Form.Item name="vehicleTag" noStyle>
-                        <Input style={{ width: '100px' }} />
+                        <Input style={{ width: '160px' }} />
                     </Form.Item>
                     <Button onClick={search_crdInfoTable} type={'primary'} style={{ marginLeft: '5px' }}>
                         查询

@@ -131,7 +131,7 @@ export default function AddMeal(props) {
                 <span>车牌/车架号:</span>
                 <Form form={form}>
                     <Form.Item name="carType" noStyle>
-                        <Input style={{ width: '110px' }} />
+                        <Input style={{ width: '160px' }} />
                     </Form.Item>
                 </Form>
 
