@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Divider, Form, Button, Modal, Radio, message } from 'antd'
 import { Helmet } from 'react-helmet'
-import Modal2 from '@/components/Modal2'
+
 import moment from 'moment'
 import CrdInfo from './crdInfo'
 import EditTable from '@/components/EditTable'
