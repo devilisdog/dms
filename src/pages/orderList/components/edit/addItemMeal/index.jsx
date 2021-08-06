@@ -34,11 +34,7 @@ export default function AddMeal(props) {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            const mealID = []
-            selectedRows.map((item) => {
-                mealID.push(item[0])
-            })
-            props.getItemMealKeys(selectedRowKeys, mealID)
+            props.getItemMealKeys(selectedRows)
         },
         getCheckboxProps: (record) => ({
             disabled: record.name === 'Disabled User',
@@ -56,7 +52,8 @@ export default function AddMeal(props) {
                 columns={colums}
                 dataSource={dataSource}
                 pagination={false}
-                rowKey={(record) => record.ItemCode}
+                scroll={{ y: 600 }}
+                rowKey={(record) => record[0]}
                 // onRow={(record) => {
                 //   return {
                 //     onClick: (event) => {

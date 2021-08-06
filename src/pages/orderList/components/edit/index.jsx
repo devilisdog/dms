@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Divider, Form, Button, Modal, Radio, message } from 'antd'
 import { Helmet } from 'react-helmet'
-
+import Modal2 from '@/components/Modal2'
 import moment from 'moment'
 import CrdInfo from './crdInfo'
 import EditTable from '@/components/EditTable'
@@ -94,6 +94,9 @@ export default function Edit(props) {
     //剩余套餐的id
     const [mealID, setmealID] = useState([])
 
+    //剩余套餐弹窗选中项目
+    const [mealItemRow, setMealItemRow] = useState([])
+
     const searchDetail = () => {
         const params = {
             code: code,
@@ -176,7 +179,7 @@ export default function Edit(props) {
         selectedRow.map((ele, index) => {
             arr.push({
                 ...ele,
-                key: Math.random().toString(36).substr(3, 10),
+                key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
             })
         })
         setSelectRow_Project(arr)
@@ -195,7 +198,7 @@ export default function Edit(props) {
         selectedRow.map((ele, index) => {
             arr.push({
                 ...ele,
-                key: Math.random().toString(36).substr(3, 10),
+                key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
                 ID: ele.PartStorageID,
                 SellQuantity: getNumValue(ele?.Quantity),
                 SellPrice: getNumValue(ele?.SellPrice1),
@@ -221,7 +224,7 @@ export default function Edit(props) {
             list_repair.map((item, index) => {
                 arr.push({
                     ...item,
-                    key: Math.random().toString(36).substr(3, 10),
+                    key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
                     ManhourItemName: item.ManHourItemName,
                 })
             })
@@ -233,7 +236,7 @@ export default function Edit(props) {
             list_item.map((item, index) => {
                 arr_list_item.push({
                     ...item,
-                    key: Math.random().toString(36).substr(3, 10),
+                    key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
                     ManhourItemName: item.ManHourItemName,
                 })
             })
@@ -365,21 +368,38 @@ export default function Edit(props) {
         })
     }
 
-    const getItemMealKeys = (keys, mealID) => {
+    const getItemMealKeys = (selectedRows) => {
+        const mealID = []
+        const ItemCodeArr = []
+        const arr = []
+        selectedRows.map((item) => {
+            mealID.push(item[0])
+            ItemCodeArr.push(item.ItemCode)
+            arr.push({
+                ...item,
+                key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
+                ManhourItemName: item.ServiceItem,
+                person: item.person,
+                ManhourExpense: item.CostPrice,
+                DistinguishFlag: item.DistinguishFlag,
+            })
+        })
+
+        setMealItemRow(arr)
+
         setmealID(mealID)
         const params = {
-            itemCode: `${keys.join(',')}`,
+            itemCode: `${ItemCodeArr.join(',')}`,
         }
         request
             .get('/v1/info/remaining-items', { params })
             .then((res) => {
-                console.log(res, 'res')
                 if (Array.isArray(res.data)) {
                     const arr = []
                     res.data.map((ele, index) => {
                         arr.push({
                             ...ele,
-                            key: Math.random().toString(36).substr(3, 10),
+                            key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
                             ID: ele.RepairMenuPartID,
                             SellQuantity: getNumValue(ele?.Quantity),
                             SellPrice: getNumValue(ele?.SellPrice1),
@@ -396,6 +416,8 @@ export default function Edit(props) {
 
     const handelOK_addItemMeal = () => {
         setDataSourceMeal([...itmeMealInfoData, ...dataSourceMeal])
+
+        setDataSource([...mealItemRow, ...dataSource])
 
         setVisible(false)
     }
@@ -432,22 +454,24 @@ export default function Edit(props) {
             </Button>
         ),
         addProject: (
-            <Button type="primary" onClick={project_confirm} disabled={false}>
+            <Button type="primary" onClick={project_confirm}>
                 确定
             </Button>
         ),
         addItem: (
-            <Button type="primary" onClick={item_confirm} disabled={false}>
+            <Button type="primary" onClick={item_confirm}>
                 确定
             </Button>
         ),
         addItemMeal: (
-            <Button type="primary" onClick={handelOK_addItemMeal} disabled={itmeMealInfoData.length > 0 ? false : true}>
+            <Button type="primary" onClick={handelOK_addItemMeal} disabled={mealItemRow.length > 0 ? false : true}>
                 确定
             </Button>
         ),
     }
     const userInfo = JSON.parse(localStorage.getItem('user'))
+
+    console.log(dataSource, '...')
 
     return (
         <div className="EditPage">
@@ -487,8 +511,6 @@ export default function Edit(props) {
                     <Button type="primary" onClick={() => showModal('addItem')} style={{ marginRight: '5px' }}>
                         新增零件
                     </Button>
-
-                   
 
                     <EditTableMeal form={form} tableColumns={tableColumns_two} dataSource={dataSourceMeal} getlist={get_Op_list} getRow={getKeyArr} />
                 </div>
@@ -572,7 +594,7 @@ export default function Edit(props) {
                 </div>
             )}
 
-            <Modal title={title} visible={visible} destroyOnClose={true} onCancel={() => setVisible(false)} footer={modalFooterButObj[type]}>
+            <Modal forceRender title={title} visible={visible} onCancel={() => setVisible(false)} footer={modalFooterButObj[type]}>
                 {componentsObj[type]}
             </Modal>
         </div>
