@@ -594,9 +594,11 @@ export default function Edit(props) {
                 </div>
             )}
 
-            <Modal forceRender title={title} visible={visible} onCancel={() => setVisible(false)} footer={modalFooterButObj[type]}>
-                {componentsObj[type]}
-            </Modal>
+            {visible && (
+                <Modal forceRender title={title} visible={visible} onCancel={() => setVisible(false)} footer={modalFooterButObj[type]}>
+                    {componentsObj[type]}
+                </Modal>
+            )}
         </div>
     )
 }

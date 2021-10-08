@@ -6,17 +6,16 @@ export default function AddMeal(props) {
     const [dataSource, setDataSource] = useState([])
 
     const colums = [
-        { title: '套餐名称', dataIndex: 'ServiceItem', ellipsis: true },
-        { title: '剩余数量', dataIndex: 'SurplusAmount', ellipsis: true },
+        { title: '套餐名称', dataIndex: 'ServiceItem' },
+        { title: '剩余数量', dataIndex: 'SurplusAmount' },
         {
             title: '单价',
             dataIndex: 'CostPrice',
-            ellipsis: true,
             render: (text) => {
                 return <div>{Number(text).toFixed(1)}</div>
             },
         },
-        { title: '有效期', dataIndex: 'UsefulLife', ellipsis: true },
+        { title: '有效期', dataIndex: 'UsefulLife' },
     ]
 
     const search = () => {
