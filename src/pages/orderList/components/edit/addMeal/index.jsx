@@ -3,14 +3,14 @@ import { Table, Modal, Form, Input, Button } from 'antd'
 import request from '@/utils/request'
 
 export default function AddMeal(props) {
-    const { VehicleTag = '' } = props
+    const { CarTypeCode = '' } = props
     const [form] = Form.useForm()
     const [dataSource, setDataSource] = useState([])
     const [record, setRecord] = useState({})
     const [visible, setVisible] = useState(false)
 
     const colums = [
-        { title: '套餐名称', dataIndex: 'RepairMenuName' },
+        { title: '车型', dataIndex: 'VehicleGroupCode' },
         { title: '套餐类型', dataIndex: 'RepairMenuType' },
         {
             title: '工时费',
@@ -19,7 +19,7 @@ export default function AddMeal(props) {
                 return <div>{Number(text).toFixed(1)}</div>
             },
         },
-        { title: '适用车型', dataIndex: 'VehicleGroupCode' },
+        { title: '套餐名称', dataIndex: 'RepairMenuName' },
         {
             title: '查看套餐',
             dataIndex: 'op',
@@ -102,7 +102,7 @@ export default function AddMeal(props) {
     }
 
     useEffect(() => {
-        form.setFieldsValue({ carType: VehicleTag })
+        form.setFieldsValue({ carType: CarTypeCode })
         search()
     }, [])
 
@@ -128,7 +128,7 @@ export default function AddMeal(props) {
     return (
         <div>
             <div style={{ display: 'flex', lineHeight: '32px' }}>
-                <span>车牌/车架号:</span>
+                <span>车型/套餐名称: </span>
                 <Form form={form}>
                     <Form.Item name="carType" noStyle>
                         <Input style={{ width: '160px' }} />

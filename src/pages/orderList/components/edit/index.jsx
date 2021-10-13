@@ -381,7 +381,7 @@ export default function Edit(props) {
                 ManhourItemName: item.ServiceItem,
                 person: item.person,
                 ManhourExpense: item.CostPrice,
-                DistinguishFlag: item.DistinguishFlag,
+                DistinguishFlag: item.DistinguishFlag ? item.DistinguishFlag : 'HS',
             })
         })
 
@@ -424,7 +424,7 @@ export default function Edit(props) {
 
     const componentsObj = {
         addProject: <AddPorject getSelectedRow_project={getSelectedRow_project} />, //新增项目
-        addMeal: <AddMeal getmealList={getmealList} VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} />, //新增套餐
+        addMeal: <AddMeal getmealList={getmealList} CarTypeCode={data?.TBL_RepairOrder?.CarTypeCode || form.getFieldValue('CarTypeCode')} />, //新增套餐
         dispatch: <DispatchModal handelOK={getPerson} />, //派工
         addItem: <AddItem getSelectedRow_Item={getSelectedRow_Item} />, //新增零件
         addItemMeal: <AddItemMeal VehicleTag={data?.TBL_RepairOrder?.VehicleTag || form.getFieldValue('VehicleTag')} getItemMealKeys={getItemMealKeys} />, //选择剩余项目
