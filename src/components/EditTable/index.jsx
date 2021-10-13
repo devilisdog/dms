@@ -31,7 +31,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
         })
     }
 
-    const save = async e => {
+    const save = async (e) => {
         try {
             const values = await form.validateFields()
             toggleEdit()
@@ -108,18 +108,18 @@ export default class EditableTable extends React.Component {
         }
     }
 
-    handleDelete = key => {
+    handleDelete = (key) => {
         const dataSource = [...this.state.dataSource]
         this.setState({
-            dataSource: dataSource.filter(item => (item.key || item.ID || item.Id || item.region_no) !== key),
+            dataSource: dataSource.filter((item) => (item.key || item.ID || item.Id || item.region_no) !== key),
         })
 
-        this.props.getlist(dataSource.filter(item => (item.key || item.ID || item.Id || item.region_no) !== key))
+        this.props.getlist(dataSource.filter((item) => (item.key || item.ID || item.Id || item.region_no) !== key))
     }
 
-    handleSave = row => {
+    handleSave = (row) => {
         const newData = [...this.state.dataSource]
-        const index = newData.findIndex(item => (row.Id || row.region_no || row.key || row.ID) === (item.Id || item.region_no || item.key || item.ID))
+        const index = newData.findIndex((item) => (row.Id || row.region_no || row.key || row.ID) === (item.Id || item.region_no || item.key || item.ID))
         const item = newData[index]
         newData.splice(index, 1, { ...item, ...row })
         this.setState({
@@ -136,7 +136,7 @@ export default class EditableTable extends React.Component {
             dataIndex: 'operation',
             render: (text, record) => {
                 const key = record.key || record.ID || record.Id || record.region_no
-                return record.DistinguishFlag == 'HS' ? null : (
+                return record.DistinguishFlag === 'HS' ? null : (
                     <Popconfirm title="确定删除数据?" onConfirm={() => this.handleDelete(key)}>
                         <span style={{ color: 'red' }}>删除</span>
                     </Popconfirm>
@@ -158,14 +158,14 @@ export default class EditableTable extends React.Component {
                 cell: EditableCell,
             },
         }
-        const columns = this.columns.map(col => {
+        const columns = this.columns.map((col) => {
             if (!col.editable) {
                 return col
             }
 
             return {
                 ...col,
-                onCell: record => ({
+                onCell: (record) => ({
                     record,
                     editable: record.DistinguishFlag == 'HS' && col.dataIndex == 'ManhourExpense' ? false : col.editable,
                     dataIndex: col.dataIndex,
@@ -190,7 +190,7 @@ export default class EditableTable extends React.Component {
                     dataSource={dataSource}
                     columns={columns}
                     pagination={false}
-                    rowKey={record => record.key || record.Id || record.ID}
+                    rowKey={(record) => record.key || record.Id || record.ID}
                 />
             </div>
         )

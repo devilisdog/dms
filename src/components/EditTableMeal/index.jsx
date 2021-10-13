@@ -130,7 +130,7 @@ export default class EditableTable extends React.Component {
             dataIndex: 'operation',
             render: (text, record) => {
                 const key = record.key || record.ID || record.Id || record.region_no || record[0]
-                return record.DistinguishFlag == 'HS' || record.IsAccount == 1 ? null : (
+                return record.DistinguishFlag === 'HS' || record.IsAccount == 1 ? null : (
                     <Popconfirm title="确定删除数据?" onConfirm={() => this.handleDelete(key)}>
                         <span style={{ color: 'red' }}>删除</span>
                     </Popconfirm>

@@ -381,7 +381,7 @@ export default function Edit(props) {
                 ManhourItemName: item.ServiceItem,
                 person: item.person,
                 ManhourExpense: item.CostPrice,
-                DistinguishFlag: item.DistinguishFlag ? item.DistinguishFlag : 'HS',
+                DistinguishFlag: item.DistinguishFlag || 'HS',
             })
         })
 
