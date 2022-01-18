@@ -97,6 +97,8 @@ export default function Edit(props) {
     //剩余套餐弹窗选中项目
     const [mealItemRow, setMealItemRow] = useState([])
 
+    const [submitLoading, setsubmitLoading] = useState(false)
+
     const searchDetail = () => {
         const params = {
             code: code,
@@ -310,6 +312,8 @@ export default function Edit(props) {
     //新建表单
     const submit = () => {
         form.validateFields().then((values) => {
+            setsubmitLoading(true)
+
             const obj = {
                 ...values,
                 BuyDate: values.BuyDate && moment(values.BuyDate).format('YYYY-MM-DD'),
@@ -327,18 +331,25 @@ export default function Edit(props) {
             request('/v1/order/create', {
                 method: 'POST',
                 data: formData,
-            }).then((res) => {
-                if (res?.data?.RepairOrderCode) {
-                    message.success('新建成功！')
-                    history.push(`/searchList/lookPage/${res?.data?.RepairOrderCode}`)
-                }
             })
+                .then((res) => {
+                    if (res?.data?.RepairOrderCode) {
+                        message.success('新建成功！')
+                        history.push(`/searchList/lookPage/${res?.data?.RepairOrderCode}`)
+                    }
+
+                    setsubmitLoading(false)
+                })
+                .catch((error) => {
+                    setsubmitLoading(false)
+                })
         })
     }
 
     //编辑表单
     const editSumit = () => {
         form.validateFields().then((values) => {
+            setsubmitLoading(true)
             const obj = {
                 ...values,
                 BuyDate: values.BuyDate && moment(values.BuyDate).format('YYYY-MM-DD'),
@@ -361,9 +372,12 @@ export default function Edit(props) {
                 .then((res) => {
                     message.success('编辑成功！')
                     history.push(`/searchList/lookPage/${TBL_RepairOrder?.RepairOrderCode}`)
+
+                    setsubmitLoading(false)
                 })
                 .catch((err) => {
                     console.log(err, 'err')
+                    setsubmitLoading(false)
                 })
         })
     }
@@ -567,7 +581,7 @@ export default function Edit(props) {
                         justifyContent: 'center',
                     }}
                 >
-                    <Button type="primary" onClick={submit}>
+                    <Button type="primary" onClick={submit} loading={submitLoading}>
                         保存工单
                     </Button>
                 </div>

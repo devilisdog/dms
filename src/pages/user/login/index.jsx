@@ -19,7 +19,7 @@ const LoginMessage = ({ content }) => (
     />
 )
 
-const Login = props => {
+const Login = (props) => {
     const { userLogin = {}, submitting } = props
     const { status, type: loginType } = userLogin
     const [autoLogin, setAutoLogin] = useState(false)
@@ -33,7 +33,7 @@ const Login = props => {
         }
     }, [])
 
-    const handleSubmit = values => {
+    const handleSubmit = (values) => {
         const params = {
             ...values,
         }
@@ -42,7 +42,7 @@ const Login = props => {
             method: 'POST',
             data: params,
         })
-            .then(res => {
+            .then((res) => {
                 if (autoLogin) {
                     localStorage.setItem('napw', JSON.stringify(values))
                     localStorage.setItem('autoLogin', autoLogin)
@@ -52,7 +52,7 @@ const Login = props => {
                 localStorage.setItem('user', JSON.stringify(res?.data?.user))
                 props.history.push('/buildOrder')
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error)
             })
     }
@@ -84,54 +84,16 @@ const Login = props => {
                         ]}
                     />
                 </Tab>
-                {/* <Tab key="mobile" tab="手机号登录">
-          {status === "error" && loginType === "mobile" && !submitting && (
-            <LoginMessage content="验证码错误" />
-          )}
-          <Mobile
-            name="mobile"
-            placeholder="手机号"
-            rules={[
-              {
-                required: true,
-                message: "请输入手机号！",
-              },
-              {
-                pattern: /^1\d{10}$/,
-                message: "手机号格式错误！",
-              },
-            ]}
-          />
-          <Captcha
-            name="captcha"
-            placeholder="验证码"
-            countDown={120}
-            getCaptchaButtonText=""
-            getCaptchaSecondText="秒"
-            rules={[
-              {
-                required: true,
-                message: "请输入验证码！",
-              },
-            ]}
-          />
-        </Tab> */}
+
                 <div>
                     <Checkbox
                         checked={autoLogin}
-                        onChange={e => {
+                        onChange={(e) => {
                             setAutoLogin(e.target.checked)
                         }}
                     >
                         记住密码
                     </Checkbox>
-                    {/* <a
-            style={{
-              float: "right",
-            }}
-          >
-            忘记密码
-          </a> */}
                 </div>
                 <Submit loading={submitting}>登录</Submit>
             </LoginForm>
